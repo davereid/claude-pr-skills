@@ -1,6 +1,6 @@
 ---
 name: pr-fix
-description: Diagnose and fix a failing pull request in a DDEV project, either one opened by a bot (Renovate, Dependabot or any other) or one the user opened themselves (patches that no longer apply, config or schema updates, dependency conflicts, test regressions, lint or build failures), test the fix locally with the failed workflow's own commands, and push it only after the user approves. Use when asked to fix a failing PR, a failing bot/dependency PR, or via /pr-fix [PR number | all].
+description: Fix a failing PR in a DDEV project, from Renovate, Dependabot or the user.
 ---
 
 # Fix PR

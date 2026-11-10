@@ -1,6 +1,6 @@
 ---
 name: pr-triage
-description: List open pull requests that need the user's attention, filtered to their skill set from a profile file. Shows PRs they previously reviewed that have new commits (and summarizes the changes against their earlier review), and PRs that need their review (requested, or matching their profile). Then offers to approve, request changes, comment or hand off to a full review. Use when asked what PRs need my review, to triage PRs, to re-review PRs, or what changed since my review. Usage /pr-triage [PR number | owner/repo | --all] [--approved | --changes-requested] [--all-prs]
+description: Triage open PRs that need the user's review, or changed since their review.
 allowed-tools: Bash, Read, AskUserQuestion
 ---
 
