@@ -58,7 +58,7 @@ Rule matching (apply it literally and say which rule matched):
 
 ### 4. Show the triage list
 
-Two tables, A then B (omit an empty one), one line per PR: number, title, author, last updated ("3 days ago", from step 2), why it's listed, size (files, +/-). Sort each table by most recently updated first. For A, include the user's last review state and date. For a PR authored by a bot (a login ending in `[bot]`, or starting with `app/`) or labeled `dependencies` that requests the user, also run `gh pr checks <n> -R <repo>` and add "CI failing" to the why column when a check fails. Under them: "N PRs not matching your profile" (and how many were excluded), and which profile files were loaded. If the user gave a PR number, skip the tables.
+Two tables, A then B (omit an empty one), one line per PR: number, title, author, last updated ("3 days ago", from step 2), why it's listed, size (files, +/-). Sort each table by most recently updated first. For A, include the user's last review state and date. For a PR authored by a bot (a login ending in `[bot]`, or starting with `app/`) or labeled `dependencies` that requests the user, also run `gh pr checks <n> -R <repo>` and add "CI failing" to the why column when a check fails (see "Reading CI results" if it fails). Under them: "N PRs not matching your profile" (and how many were excluded), and which profile files were loaded. If the user gave a PR number, skip the tables.
 
 Then ask with AskUserQuestion which PRs to handle now (multi-select, with "none"). Handle them one at a time.
 
@@ -66,7 +66,7 @@ Then ask with AskUserQuestion which PRs to handle now (multi-select, with "none"
 
 ```bash
 gh api repos/<repo>/compare/<reviewedSha>...<headSha>
-gh pr checks <n> -R <repo>
+gh pr checks <n> -R <repo>   # or the fallback in "Reading CI results"
 gh pr view <n> -R <repo> --json comments,reviews   # anything after the user's review
 gh api repos/<repo>/pulls/<n>/reviews/<review-id>/comments   # the user's own inline comments
 ```
@@ -122,10 +122,19 @@ The `gh` token only needs read access to triage. Write access is needed only for
 - **Fine-grained token** (repository permissions, on the repos to triage; Metadata read is added automatically and isn't listed):
   - Pull requests: read, for listing, reviews, comments and files. Pull requests: write for approving, requesting changes, commenting and dismissing.
   - Contents: read, for the compare API and `CODEOWNERS`.
-  - Actions: read and Commit statuses: read, for `gh pr checks`. Not verified: if `gh pr checks` fails or shows nothing, the error names the missing permission.
+  - Actions: read and Commit statuses: read, for CI results. Fine-grained tokens can't have Checks: read, so `gh pr checks` fails with them; use the fallback in "Reading CI results".
   - `--all` searches only repos the token can read.
 - Team membership (`gh api user/teams`) may be unavailable to a fine-grained token. If it fails, the skill falls back to direct review requests (step 1).
 - If a read call fails with a 403 or 404 on a repo the user can open, suggest checking the token's permissions and repo access before assuming the data doesn't exist.
+
+## Reading CI results
+
+Use `gh pr checks <n> -R <repo>`. If it fails with "Resource not accessible by personal access token", the token is fine-grained and has no Checks: read. Fall back to:
+
+- `gh run list -R <repo> --commit <headRefOid> --json databaseId,workflowName,event,status,conclusion` for GitHub Actions. For each workflow and event, only the newest run (highest `databaseId`) counts. It failed if its `conclusion` is `failure`, `timed_out` or `startup_failure`.
+- `gh api repos/<repo>/commits/<headRefOid>/status` for commit statuses from CI outside Actions (e.g. Tugboat). A `failure` or `error` state is a failure. Ignore the combined `state` when `statuses` is empty: it's always `pending` then.
+
+Check runs from other GitHub Apps can't be read this way. When using the fallback, say that only Actions runs and commit statuses were checked.
 
 ## Profile
 

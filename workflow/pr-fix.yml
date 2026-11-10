@@ -18,6 +18,8 @@ on:
 permissions:
   contents: read
   actions: read
+  checks: read
+  statuses: read
   pull-requests: write
 
 concurrency:
