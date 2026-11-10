@@ -23,13 +23,7 @@ The brief for this skill was written during a workshop at the 2026 Lullabot Retr
 
 ## Installation
 
-As a Claude Code plugin:
-
-```
-/plugin install pr-skills@davereid
-```
-
-Or with [`npx skills`](https://github.com/vercel-labs/skills), which installs the repository's skills (not the Taskfile or CI workflow):
+With [`npx skills`](https://github.com/vercel-labs/skills), the recommended way for the skill alone. It installs the repository's skills (not the Taskfile or CI workflow) and the command is `/pr-fix`:
 
 ```
 npx skills add https://github.com/davereid/claude-pr-skills
@@ -45,6 +39,13 @@ composer require --dev davereid/claude-pr-skills
 
 On Drupal sites, `drupal/core-composer-scaffold` can copy the skill into `.claude/skills/` once `davereid/claude-pr-skills` is in `extra.drupal-scaffold.allowed-packages`.
 
+Or as a Claude Code plugin, where the command is `/pr-skills:pr-fix`:
+
+```
+/plugin marketplace add davereid/claude-pr-skills
+/plugin install pr-skills@davereid
+```
+
 Use one or the other for the skill, not both. Full steps, including credentials and CI: [SETUP.md](SETUP.md).
 
 
@@ -56,7 +57,7 @@ In Claude Code:
 /pr-fix 123
 ```
 
-`/pr-fix all` works through every failing bot PR and PR of your own in turn, asking before each push. With no argument, it lists them and asks which one to fix, or all.
+With the plugin install, use `/pr-skills:pr-fix` instead of `/pr-fix`. `/pr-fix all` works through every failing bot PR and PR of your own in turn, asking before each push. With no argument, it lists them and asks which one to fix, or all.
 
 With Composer, include the Taskfile from the project's root `Taskfile.yml`:
 

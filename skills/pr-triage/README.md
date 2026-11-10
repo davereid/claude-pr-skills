@@ -29,6 +29,8 @@ Optionally, create a profile (see below).
 /pr-triage
 ```
 
+With the plugin install, use `/pr-skills:pr-triage` instead of `/pr-triage`.
+
 | Command | What it does |
 |---|---|
 | `/pr-triage` | Triage the current repository |

@@ -16,9 +16,16 @@ Claude Code skills for working with pull requests.
 
 Each skill's README has its requirements, installation steps, usage and limits. In short:
 
-- As a Claude Code plugin: `/plugin install pr-skills@davereid`
-- With [`npx skills`](https://github.com/vercel-labs/skills): `npx skills add https://github.com/davereid/claude-pr-skills`
-- With Composer: `composer require --dev davereid/claude-pr-skills`
+With [`npx skills`](https://github.com/vercel-labs/skills), the recommended way: one command, short commands (`/pr-fix`, `/pr-triage`), and it also works with other agents it supports:
+
+```
+npx skills add https://github.com/davereid/claude-pr-skills
+```
+
+Other ways:
+
+- With Composer, which also provides the `pr-fix` Taskfile tasks and CI workflow: `composer require --dev davereid/claude-pr-skills`
+- As a Claude Code plugin: `/plugin marketplace add davereid/claude-pr-skills`, then `/plugin install pr-skills@davereid`. The commands are then `/pr-skills:pr-fix` and `/pr-skills:pr-triage`.
 
 
 ## AI disclosure
