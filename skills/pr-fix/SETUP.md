@@ -4,21 +4,21 @@ You connect accounts and grant access yourself; the skill can't.
 
 ## Local
 
-**Plugin only:** `/plugin install fix-pr --marketplace davereid/claude-fix-pr`, then do steps 4–5 below. Composer and the Taskfile are only needed for `task pr:*` and the CI workflow. Don't also run `install-skill`, or the skill is loaded twice.
+**Plugin only:** `/plugin install pr-skills@davereid`, then do steps 4–5 below. Composer and the Taskfile are only needed for `task pr:*` and the CI workflow. Don't also run `install-skill`, or the skill is loaded twice.
 
-1. `composer require --dev davereid/claude-fix-pr`
+1. `composer require --dev davereid/claude-pr-skills`
 2. Add to the project's root `Taskfile.yml`:
    ```yaml
    includes:
-     pr: ./vendor/davereid/claude-fix-pr/Taskfile.yml
+     pr: ./vendor/davereid/claude-pr-skills/Taskfile.yml
    ```
-3. Install the skill into `.claude/skills/fix-pr`, using one of these:
-   - **Drupal sites with `drupal/core-composer-scaffold`:** add `"davereid/claude-fix-pr"` to `extra.drupal-scaffold.allowed-packages` in the root `composer.json`, then run `composer install`. Add it to the existing list if there is one:
+3. Install the skill into `.claude/skills/pr-fix`, using one of these:
+   - **Drupal sites with `drupal/core-composer-scaffold`:** add `"davereid/claude-pr-skills"` to `extra.drupal-scaffold.allowed-packages` in the root `composer.json`, then run `composer install`. Add it to the existing list if there is one:
      ```json
      "extra": {
          "drupal-scaffold": {
              "allowed-packages": [
-                 "davereid/claude-fix-pr"
+                 "davereid/claude-pr-skills"
              ]
          }
      }
@@ -26,10 +26,10 @@ You connect accounts and grant access yourself; the skill can't.
      Scaffold copies the skill in and refreshes it on every `composer install` and `composer update`.
    - **Other projects:** run `task pr:install-skill`, which symlinks it.
 
-   Commit `.claude/skills/fix-pr` to share it with the team, or ignore it in git.
+   Commit `.claude/skills/pr-fix` to share it with the team, or ignore it in git.
 4. GitHub: create a fine-grained token for this repository only, with Contents: read/write, Pull requests: read/write and Actions: read. Then run `gh auth login --hostname <your GitHub host>`.
 5. Check that `git push` to the repo works with your SSH key (and signing, if required).
-6. Run it with `task pr:fix` (every failing bot PR and PR of your own) or `task pr:fix PR=123`. In Claude Code, use `/fix-pr all` or `/fix-pr 123`.
+6. Run it with `task pr:fix` (every failing bot PR and PR of your own) or `task pr:fix PR=123`. In Claude Code, use `/pr-fix all` or `/pr-fix 123`.
 
 **Unverified: ddev-claude container** (`marcoscano/ddev-claude`):
 

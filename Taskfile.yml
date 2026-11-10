@@ -2,7 +2,7 @@ version: '3'
 
 # Include from the project's root Taskfile.yml:
 #   includes:
-#     pr: ./vendor/davereid/claude-fix-pr/Taskfile.yml
+#     pr: ./vendor/davereid/claude-pr-skills/Taskfile.yml
 
 tasks:
   default:
@@ -14,22 +14,23 @@ tasks:
     desc: Fix failing bot PRs and your own failing PRs with Claude Code (all of them, or PR=<number>)
     dir: '{{.ROOT_DIR}}'
     cmds:
-      - claude "/fix-pr {{.PR | default "all"}}"
+      - claude "/pr-fix {{.PR | default "all"}}"
 
   install-skill:
-    desc: Symlink the skill into .claude/skills
+    desc: Symlink the skills into .claude/skills
     dir: '{{.ROOT_DIR}}'
     cmds:
       - mkdir -p .claude/skills
-      # shortcut: assumes Composer's default vendor/ folder; adjust the link if vendor-dir is customized.
-      - ln -sfn ../../vendor/davereid/claude-fix-pr/skills/fix-pr .claude/skills/fix-pr
+      # shortcut: assumes Composer's default vendor/ folder; adjust the links if vendor-dir is customized.
+      - ln -sfn ../../vendor/davereid/claude-pr-skills/skills/pr-fix .claude/skills/pr-fix
+      - ln -sfn ../../vendor/davereid/claude-pr-skills/skills/pr-triage .claude/skills/pr-triage
 
   install-workflow:
     desc: Copy the CI workflow template into .github/workflows (shows a diff if it already exists)
     dir: '{{.ROOT_DIR}}'
     vars:
-      SRC: '{{.TASKFILE_DIR}}/workflow/fix-pr.yml'
-      DEST: .github/workflows/fix-pr.yml
+      SRC: '{{.TASKFILE_DIR}}/workflow/pr-fix.yml'
+      DEST: .github/workflows/pr-fix.yml
     cmds:
       - mkdir -p .github/workflows
       - |

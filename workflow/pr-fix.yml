@@ -21,7 +21,7 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: fix-pr-${{ github.event.workflow_run.head_branch || inputs.pr || github.event.pull_request.number }}
+  group: pr-fix-${{ github.event.workflow_run.head_branch || inputs.pr || github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
@@ -89,15 +89,15 @@ jobs:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ github.token }}
           prompt: |
-            /fix-pr ${{ steps.pr.outputs.number }}
-            You are running in CI (comment-only mode): never commit, push or comment. Write the report to fix-pr-comment.md.
+            /pr-fix ${{ steps.pr.outputs.number }}
+            You are running in CI (comment-only mode): never commit, push or comment. Write the report to pr-fix-comment.md.
           claude_args: >-
             --max-turns 60
             --allowedTools "Read,Grep,Glob,Edit,Write,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr checks:*),Bash(gh run view:*),Bash(git status:*),Bash(git diff:*),Bash(git log:*),Bash(ddev:*)"
 
       - uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
-        if: steps.pr.outputs.match == 'true' && hashFiles('fix-pr-comment.md') != ''
+        if: steps.pr.outputs.match == 'true' && hashFiles('pr-fix-comment.md') != ''
         with:
-          header: fix-pr
+          header: pr-fix
           number: ${{ steps.pr.outputs.number }}
-          path: fix-pr-comment.md
+          path: pr-fix-comment.md

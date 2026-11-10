@@ -17,7 +17,7 @@ For developers on DDEV projects that get dependency PRs from Renovate or Dependa
 - **Where it runs:** on the host (calling `ddev …`), or inside the ddev-claude container (calling `task …`/`composer …` directly). The skill detects which one.
 - **CI (comment only):** the project's workflow, copied from the template, runs on `workflow_run` when a listed workflow fails on a matching PR, and on `workflow_dispatch` with a PR number.
 - **Preconditions:**
-  - The PR matches the bot rules (see Access).
+  - The PR matches the eligibility rules (see Access).
   - The project has a `.ddev` folder.
   - In CI, `ANTHROPIC_API_KEY` is set; otherwise the job exits early with a notice.
 
@@ -30,7 +30,7 @@ For developers on DDEV projects that get dependency PRs from Renovate or Dependa
 
 **Workflow** (Q14): fixed steps with known branches, so it's predictable and traceable.
 
-1. Check that the PR matches the bot rules; otherwise stop.
+1. Check that the PR is eligible (see Access); otherwise stop.
 2. Read the failed workflow's logs and the PR diff.
 3. Classify the failure:
    - A. A patch fails to apply
@@ -63,15 +63,13 @@ For developers on DDEV projects that get dependency PRs from Renovate or Dependa
   - run without limits
   - touch production or other remote environments
   - merge, approve or close PRs
-  - modify any PR that doesn't match the bot rules
+  - modify any PR that isn't eligible
   - force-push
   - push to any branch other than the PR's own
   - push from CI
 
   When unsure, stop and ask. In CI, comment only.
-- **Bot rules:** both the branch and the author must match.
-  - **Renovate:** the branch starts with `renovate/` or the config's `branchPrefix`, and the author is the configured Renovate bot (default `renovate[bot]`).
-  - **Dependabot:** the branch starts with `dependabot/`, and the author is `dependabot[bot]`.
+- **Eligible PRs:** the author is any bot (`author.is_bot`, whatever its login: `app/example-renovate[bot]`, `app/dependabot`, `dependabot[bot]`) or the user logged in to `gh`, and the branch is in this repository. The branch name isn't checked, so custom Renovate apps and `branchPrefix` need no setup. In CI, the automatic trigger runs only for `dependabot/` branches whose author, with `app/` and `[bot]` stripped, is `dependabot`. The normalization was seen on the examples above; other GitHub Enterprise setups may format logins differently.
 - **State:** none; each run starts fresh. CI uses the sticky comment's header instead of remembering what it posted.
 
 ### Setup checklist

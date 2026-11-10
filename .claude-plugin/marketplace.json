@@ -5,9 +5,9 @@
   },
   "plugins": [
     {
-      "name": "fix-pr",
+      "name": "pr-skills",
       "source": "./",
-      "description": "Diagnose and fix failing bot PRs (Renovate, Dependabot) and your own failing PRs in DDEV projects."
+      "description": "Skills for pull requests: pr-fix (fix failing PRs in DDEV projects) and pr-triage (list the PRs that need your review)."
     }
   ]
 }

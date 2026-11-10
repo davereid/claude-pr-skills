@@ -1,14 +1,18 @@
 {
-    "name": "davereid/claude-fix-pr",
-    "description": "Claude Code skill, Taskfile and CI workflow that fix failing bot PRs (Renovate, Dependabot) and your own failing PRs in DDEV projects.",
+    "name": "davereid/claude-pr-skills",
+    "description": "Claude Code skills for pull requests: fix failing PRs in DDEV projects (with a Taskfile and CI workflow) and triage the PRs that need your review.",
     "type": "library",
     "license": "MIT",
     "require": {},
     "extra": {
         "drupal-scaffold": {
             "file-mapping": {
-                "[project-root]/.claude/skills/fix-pr/SKILL.md": "skills/fix-pr/SKILL.md",
-                "[project-root]/.claude/skills/fix-pr/SETUP.md": "skills/fix-pr/SETUP.md"
+                "[project-root]/.claude/skills/pr-fix/SKILL.md": "skills/pr-fix/SKILL.md",
+                "[project-root]/.claude/skills/pr-fix/SETUP.md": "skills/pr-fix/SETUP.md",
+                "[project-root]/.claude/skills/pr-fix/README.md": "skills/pr-fix/README.md",
+                "[project-root]/.claude/skills/pr-triage/SKILL.md": "skills/pr-triage/SKILL.md",
+                "[project-root]/.claude/skills/pr-triage/README.md": "skills/pr-triage/README.md",
+                "[project-root]/.claude/skills/pr-triage/profile.example.md": "skills/pr-triage/profile.example.md"
             }
         }
     }
