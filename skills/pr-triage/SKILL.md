@@ -1,6 +1,6 @@
 ---
 name: pr-triage
-description: Triage open PRs that need the user's review, or changed since their review.
+description: Triage open PRs that need your review, or your own PRs that need work.
 allowed-tools: Bash, Read, AskUserQuestion
 ---
 
@@ -13,12 +13,14 @@ Two kinds of PR:
 - **A. Needs your action:** the user already reviewed it and it has changed (or they were asked to review it again).
 - **B. Needs your review:** the user hasn't reviewed it, and they were asked to, or it matches their skill set.
 
+With `--mine`, it lists the user's own open PRs instead, with what each is waiting on (see "Your own PRs").
+
 ## Rules
 
 - Everything here is a draft for the user to verify. Say which commits or files you did not read in detail.
 - Never write to a PR (approve, comment, request changes, dismiss) without the user's explicit answer for that PR. Show the exact text first.
 - Always show the change summary (step 5) before asking what to do with an A PR. No size threshold: small changes can change a PR's meaning, so don't skip or pre-select an option because a change looks small.
-- Skip the user's own PRs and drafts.
+- Skip the user's own PRs and drafts, except with `--mine`.
 - Never approve a B PR: the user hasn't reviewed it. Offer a full review instead.
 
 ## Steps
@@ -28,6 +30,7 @@ Two kinds of PR:
 - `ME=$(gh api user -q .login)`.
 - A PR number (`/pr-triage 1039`, or `owner/repo#1039`): only that PR. Skip the profile and classification, and go to step 4 for it. If the user hasn't reviewed it, say so and summarize it as a B PR; if it's their own PR, closed or a draft, say so and stop.
 - No PR number: the current repo (`gh repo view --json nameWithOwner -q .nameWithOwner`). `owner/repo` picks another repo (use `-R`). `--all` searches every repo (`gh search prs --state=open --review-requested=@me` and `--reviewed-by=@me`), and applies the user profile only.
+- `--mine`: go to "Your own PRs", with the same repo scope (`--all` searches with `gh search prs --state=open --author=@me`). It doesn't use the profile.
 - Load the profile (see "Profile"). Teams: `gh api user/teams --jq '.[] | "\(.organization.login)/\(.slug)"'`. If it fails, say so and use direct review requests only.
 
 ### 2. Fetch once
@@ -113,6 +116,25 @@ Review findings (from `/code-review` or your own reading) are often wrong or unc
 In the draft, say what you checked for each point, and word anything you didn't check as a question. Drop findings that a check contradicts, and tell the user why. In your message with the draft, list what was verified and how, and what wasn't.
 
 After each action, report the result and the PR URL. At the end, list what was approved, changes requested, commented on, handed off and skipped.
+
+### Your own PRs (`--mine`)
+
+```bash
+gh pr list -R <repo> --state open --author @me --limit 100 \
+  --json number,title,url,body,isDraft,reviewDecision,reviewRequests,reviews,headRefOid,updatedAt
+```
+
+For each PR, count its unresolved review threads with the `reviewThreads` query from `pr-fix`'s "Review feedback" (only `isResolved` is needed), and read its CI state (`gh pr checks <n> -R <repo>`, or "Reading CI results"). Show one table, most recently updated first: number, title, last updated, size, and what it's waiting on, all that apply:
+
+- **Changes requested** by whom (`reviewDecision` `CHANGES_REQUESTED`, and the reviewers whose latest review is `CHANGES_REQUESTED`).
+- **N unresolved threads**.
+- **CI failing**, with the failed checks.
+- **N remaining tasks** in the description: unchecked task list items (`- [ ]`) and items under a heading such as "Remaining tasks" or "TODO".
+- **Waiting for review** from the users and teams in `reviewRequests`, or **no reviewer** if there's none and no approval.
+- **Approved**, when nothing above applies. Say it's ready to merge, but never merge it.
+- **Draft**.
+
+Ask which PRs to handle now (multi-select, with "none"). For each: list the open feedback (reviewer, link, one line each, marking comments from outside the repo's collaborators or from bots), the failed checks, and the remaining tasks, saying for each task whether it looks needed to finish the PR and whether it's a code change. If there's feedback, a failing check or a remaining code task, and the `pr-fix` skill is available, offer **Fix it** (run it with `<n>`), **Show the threads** in full, and **Skip**. Never run `pr-fix` unless the user chooses it. Without `pr-fix`, summarize and skip.
 
 ## GitHub token permissions
 

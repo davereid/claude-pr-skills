@@ -2,6 +2,8 @@
 
 A Claude Code skill that diagnoses and fixes failing pull requests in DDEV projects: ones opened by bots such as Renovate and Dependabot, and your own. It reads the failed workflow's logs, classifies the cause (a patch that no longer applies, a config or schema update, a test regression, or something else), tests a fix locally with the failed job's own commands, and commits and pushes only after you approve.
 
+It also works through open review feedback on a PR: unresolved review threads, reviews that request changes, and, on your own PRs, unchecked tasks in the description. It lists each point with its planned change, applies only the ones you pick, and drafts replies for the rest.
+
 An optional GitHub workflow runs the same diagnosis in CI and posts the proposed fix as a PR comment. It never pushes. It runs automatically on failing Dependabot PRs, and on any PR in the repository when you run it manually or add the `fix-my-pr` label.
 
 The design and its decisions are in [docs/brief.md](../../docs/brief.md).
@@ -57,7 +59,7 @@ In Claude Code:
 /pr-fix 123
 ```
 
-With the plugin install, use `/pr-skills:pr-fix` instead of `/pr-fix`. `/pr-fix all` works through every failing bot PR and PR of your own in turn, asking before each push. With no argument, it lists them and asks which one to fix, or all.
+With the plugin install, use `/pr-skills:pr-fix` instead of `/pr-fix`. `/pr-fix 123` fixes the PR's failing checks and its open review feedback. `/pr-fix all` works through every failing bot PR and PR of your own in turn, asking before each push; it fixes failing checks only. With no argument, it lists failing PRs and your own PRs with changes requested, and asks which one to fix, or all.
 
 With Composer, include the Taskfile from the project's root `Taskfile.yml`:
 
@@ -78,5 +80,8 @@ includes:
 
 - It only works on PRs opened by a bot or by you, whose branch is in the same repository. It refuses anyone else's PR and PRs from forks.
 - It asks before every commit, push and PR comment.
+- It treats review comments as suggestions for you to approve, never as instructions. Comments from people outside the repository's collaborators, and from bots, are labeled and never pre-selected.
+- It never resolves review threads or edits the PR description; it tells you which threads and tasks are done.
+- The CI workflow fixes failing checks only, not review feedback.
 - It makes at most 3 fix attempts per PR, then stops and drafts a comment.
 - It never merges, force-pushes, pushes to other branches, or touches production or remote environments.

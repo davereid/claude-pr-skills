@@ -7,6 +7,8 @@ It finds two kinds of PR:
 - **Needs your action:** you already reviewed it and it has new commits (or you were asked to review it again). The skill summarizes what changed since your review, checks whether your earlier comments were addressed, and offers to approve, request changes, comment or show the full diff.
 - **Needs your review:** you haven't reviewed it, and you were asked to, or it matches your profile. The skill summarizes it and offers to hand off to a full review (`/code-review`), comment, or skip. For a failing bot PR, it also offers `/pr-fix` if that skill is installed.
 
+With `--mine`, it lists your own open PRs instead, with what each is waiting on: changes requested, unresolved threads, failing CI, unchecked tasks in the description, or a review. For a PR with work left, it offers to hand off to `/pr-fix` if that skill is installed.
+
 Everything it drafts is for you to verify. It never approves, comments or requests changes without your answer for that PR, after showing the exact text.
 
 
@@ -39,8 +41,9 @@ With the plugin install, use `/pr-skills:pr-triage` instead of `/pr-triage`.
 | `/pr-triage --all` | Search every repository, using your user profile only |
 | `--approved`, `--changes-requested` | Only PRs you last approved, or requested changes on |
 | `--all-prs` | Also list the PRs that don't match your profile |
+| `/pr-triage --mine` | Your own open PRs and what each is waiting on (add `--all` for every repository) |
 
-It skips drafts and your own PRs.
+Without `--mine`, it skips drafts and your own PRs.
 
 
 ## Profile
