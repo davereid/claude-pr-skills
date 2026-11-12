@@ -6,7 +6,7 @@ match:
     - "src/migrations/**"
     - "docs/**"
   labels: [ci]
-  keywords: [migrat, redirect]
+  keywords: [migrate, redirect]
   codeowners: true
 exclude:
   authors: [renovate[bot], dependabot[bot]]

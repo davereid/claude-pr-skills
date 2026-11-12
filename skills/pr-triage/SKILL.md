@@ -55,7 +55,7 @@ For each PR, find the user's latest review (by `submittedAt`, author = `$ME`; an
 
 Rule matching (apply it literally and say which rule matched):
 - `paths`: any changed file matches a glob (`**` crosses directories, `*` doesn't).
-- `labels`: any label equals one listed. `keywords`: any word appears in the title, case-insensitive.
+- `labels`: any label equals one listed. `keywords`: any word in the title is a form of a keyword, case-insensitive: plurals, verb forms and related nouns count (`migrate` matches "migrates", "migrated", "migrating", "migration" and "migrations"), but not unrelated words that share letters (`test` doesn't match "latest"). Say which title word matched.
 - `codeowners: true`: read `CODEOWNERS` (`.github/`, root or `docs/`) at the PR's base; for each changed file the last matching pattern wins; it matches if that entry lists `@$ME` or one of the user's teams.
 - `exclude`: `authors` or `labels` match, or `paths` match **every** changed file. Excludes don't hide requested reviews when `always_show_requested` is true (default).
 
@@ -171,7 +171,7 @@ Merge: mappings merge key by key, and a list in the repo file replaces the same 
 match:
   paths: ["src/migrations/**"]    # any changed file matches
   labels: [ci]
-  keywords: [migrat]              # in the title, case-insensitive
+  keywords: [migrate]             # any form of the word in the title
   codeowners: true                # CODEOWNERS entries naming me or my teams
 exclude:
   authors: [renovate[bot], dependabot[bot]]
