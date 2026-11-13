@@ -91,6 +91,17 @@ Your own MRs: `projects/:id/merge_requests?state=opened&author_username=$ME&per_
 - Comment on an MR: `glab mr note <iid> -R <repo> -m "<text>"`
 - Comment on an issue: `glab issue note <iid> -R <repo> -m "<text>"`
 - Close an issue: `glab issue close <iid> -R <repo>` after the comment.
+- Edit an MR's description: `glab mr update <iid> -R <repo> --description-file <file>`, after all edits to the file have succeeded.
+- Retarget: `glab mr update <iid> -R <repo> --target-branch <branch>`.
+- Rebase: `glab api --hostname <host> -X PUT "projects/:id/merge_requests/<iid>/rebase"`, then check `merge_requests/<iid>?include_rebase_in_progress=true` until `rebase_in_progress` is false and `merge_error` is null. Needs push access to the source branch; GitLab refuses it when `has_conflicts` is true.
+
+## Supported branches
+
+The default branch (`default_branch` in `projects/:id`), plus release branches with recent releases (`projects/:id/releases` or tags), or named in the project's docs. Ask the user if it's unclear.
+
+## Closing keywords
+
+`Closes #<iid>` or `Fixes #<iid>` (a colon after the keyword is allowed) in the MR description closes the issue when the MR merges into the default branch, unless the project turned it off; a full issue URL also works. Merging into another branch doesn't close it.
 
 ## Security
 

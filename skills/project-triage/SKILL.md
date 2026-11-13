@@ -112,7 +112,8 @@ Show, in this order:
 3. **How it affects the PR:** does it change behavior, scope or purpose; does it touch what the user originally reviewed; or is it only tests, docs, formatting or a base merge.
 4. **Your earlier review:** for changes requested and commented, list the user's earlier points (review body and inline comments) and say for each whether the new commits address it, partly address it, or not. Note author replies and thread resolutions.
 5. **Tests:** whether the new commits keep the PR's fix or feature covered (see "Test coverage" in step 8).
-6. **Worth a closer look:** anything risky or surprising, new review comments from others, CI state, other reviewers' open change requests.
+6. **Linked issue** and **target branch:** see "Linked issue" and "Target branch and backports" in step 8.
+7. **Worth a closer look:** anything risky or surprising, new review comments from others, CI state, other reviewers' open change requests.
 
 Keep it faster to read than the PR itself.
 
@@ -133,7 +134,7 @@ Before drafting text, apply "Verify before commenting" (in step 8) to each earli
 
 ### 8. B PR: summarize and hand off
 
-Read the PR description, file list and commits. Say in a few lines what it does, why it's listed, how big it is, whether it has tests (see "Test coverage"), CI state, and who else has reviewed. Then ask: **Review it now** (run `/code-review <n>`, and come back to approve, request changes or comment from that), **Comment**, **Skip**. If the PR is bot-authored or labeled `dependencies`, has failing checks, and the `pr-fix` skill is available (listed as `pr-fix`, or `pr-skills:pr-fix` when installed as a plugin) and supports this host (see its `SKILL.md`), also offer **Fix it** (run it with `<n>`). That skill asks before every commit, push and comment, and only works on PRs opened by a bot or by the user, from a branch in the same repository, so it refuses the PR if it's anyone else's. Never run it unless the user chooses it. Comments follow Conventional Comments, with the text shown first.
+Read the PR description, file list and commits. Say in a few lines what it does, why it's listed, how big it is, whether it has tests (see "Test coverage"), which issue it closes (see "Linked issue"), whether it targets the default branch (see "Target branch and backports"), CI state, and who else has reviewed. Then ask: **Review it now** (run `/code-review <n>`, and come back to approve, request changes or comment from that), **Comment**, **Skip**. If the PR is bot-authored or labeled `dependencies`, has failing checks, and the `pr-fix` skill is available (listed as `pr-fix`, or `pr-skills:pr-fix` when installed as a plugin) and supports this host (see its `SKILL.md`), also offer **Fix it** (run it with `<n>`). That skill asks before every commit, push and comment, and only works on PRs opened by a bot or by the user, from a branch in the same repository, so it refuses the PR if it's anyone else's. Never run it unless the user chooses it. Comments follow Conventional Comments, with the text shown first.
 
 #### Test coverage
 
@@ -143,6 +144,26 @@ A PR that changes code should have a test that covers the bug it fixes or the fe
 - Check the PR's changed files for tests that exercise the changed code path, not just any changed test file.
 - Don't ask for tests on changes that don't need them: docs, comments, formatting, config or dependency updates with no code change, or a project with no tests at all (then only suggest adding some if the change is risky).
 - If a fix or feature has no covering test, include it in the review as `**suggestion:** Add a test that covers <the bug or feature>, e.g. <where, following an existing test>.` Mark it `blocking` only when the project's `AGENTS.md`, contributing docs or PR template requires tests (see "Convention claims" below); otherwise `non-blocking`.
+
+#### Linked issue
+
+A PR that resolves an issue should say so with the host's closing keyword (e.g. `Closes #<n>` or `Fixes #<n>`; the host's reference, "Closing keywords", gives the form), so merging it closes the issue. Look for the issue in the description, the title and the branch name (e.g. `<n>-<slug>`):
+
+- **Closing reference present:** say which issue it closes.
+- **Issue named but no closing keyword:** fine if the description says the PR only partly addresses it, or that follow-ups remain (say so). Otherwise flag "no closing reference for #<n>".
+- **No issue found:** say "no linked issue". Fine for small changes; don't ask for one.
+
+When it's flagged, offer **Add closing reference**: in an owned repo, edit the description, adding the line to its description section (or at the top when it has none) and changing nothing else; show the full new description first and use the reference's "Edit a PR's description" command. Otherwise include it in the review as `**chore:** Add "Closes #<n>" to the description so merging closes the issue.` Check again before merging, when the user asks for a merge.
+
+#### Target branch and backports
+
+Changes land on the default branch first, then go to older supported branches. When a PR targets another branch (an older release branch, or a stale one):
+
+1. **Check it still applies** to the default branch, read-only: the changed files and code paths exist there, the bug or missing feature is still present (the fix isn't already in), and the diff applies (`git apply --check` of the PR's diff onto the default branch, in a scratch worktree outside the repository). Say what you checked.
+2. **Still applies:** offer **Retarget to <default branch>**: change the PR's base, then rebase it (the reference's "Retarget" and "Rebase" commands), and say the pipeline will now test it there. Both rewrite or change someone else's PR, so show what will happen and ask first; a rebase with conflicts goes back to the author as a comment. In a repo the user doesn't own, suggest it in the review instead (`**suggestion:** Could this target <default branch>? It still applies there.`).
+3. **Doesn't apply** (already fixed, or the code is gone): say so, and offer a comment asking the author whether it's still needed on the old branch only.
+
+After a bug fix merges into the default branch (when the user asked for the merge), in an owned repo, offer **Cherry-pick to older branches**: list the other supported branches (the reference's "Supported branches", minus any the profile's `exclude.branches` matches), check the fix applies to each, then cherry-pick it there keeping the original author, with a `(cherry picked from commit <sha>)` line and the branch's commit message convention. Ask before each push. Features don't get cherry-picked unless the user asks.
 
 #### Verify before commenting
 

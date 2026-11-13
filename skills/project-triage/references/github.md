@@ -96,6 +96,17 @@ Your own PRs: `gh pr list -R <repo> --state open --author @me --limit 100 --json
 - Dismiss the user's own review: `gh api -X PUT repos/<repo>/pulls/<n>/reviews/<review-id>/dismissals -f message="<reason>"`. Not verified to work on the user's own reviews: if it fails, say so and offer request-changes or a comment.
 - Comment on an issue: `gh issue comment <n> -R <repo> --body "<text>"`
 - Close an issue: `gh issue close <n> -R <repo> --reason "<completed|not planned>"` after the comment.
+- Edit a PR's description: `gh pr edit <n> -R <repo> --body-file <file>`, after all edits to the file have succeeded.
+- Retarget: `gh pr edit <n> -R <repo> --base <branch>`.
+- Rebase: `gh pr update-branch <n> -R <repo> --rebase`. Needs push access to the head branch (for a fork, "Allow edits from maintainers").
+
+## Supported branches
+
+The default branch (`gh repo view <repo> --json defaultBranchRef`), plus release branches with a recent release (`gh release list -R <repo>`, matched to branches by version) or named in the project's docs (`SECURITY.md`'s supported versions). Ask the user if it's unclear.
+
+## Closing keywords
+
+`Closes #<n>`, `Fixes #<n>` or `Resolves #<n>` in the PR description closes the issue when the PR merges into the default branch; `owner/repo#<n>` for another repo. Merging into another branch doesn't close it.
 
 ## Security
 
