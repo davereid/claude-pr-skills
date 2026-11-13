@@ -9,14 +9,14 @@ Claude Code skills for working with pull requests.
 ## Skills
 
 - [pr-fix](skills/pr-fix/README.md): diagnoses and fixes failing pull requests in DDEV projects, from bots such as Renovate and Dependabot or your own, works through open review feedback, and pushes only after you approve.
-- [pr-triage](skills/pr-triage/README.md): lists the open PRs that need your attention, filtered by a profile of your skill set. It summarizes what changed since your last review, and offers to approve, comment or hand off to a full review. With `--mine`, it shows what your own PRs are waiting on.
+- [project-triage](skills/project-triage/README.md) (formerly `pr-triage`): lists the open PRs and issues that need your attention, on GitHub, GitLab and drupal.org: everything from others in repositories you own, administer or collaborate on directly, and elsewhere the PRs that match a profile of your skill set and the issues assigned to you. It summarizes what changed since your last review or comment, and offers to approve, comment or hand off to a full review. With `--mine`, it shows what your own PRs are waiting on.
 
 
 ## Installation
 
 Each skill's README has its requirements, installation steps, usage and limits. In short:
 
-With [`npx skills`](https://github.com/vercel-labs/skills), the recommended way: one command, short commands (`/pr-fix`, `/pr-triage`), and it also works with other agents it supports:
+With [`npx skills`](https://github.com/vercel-labs/skills), the recommended way: one command, short commands (`/pr-fix`, `/project-triage`), and it also works with other agents it supports:
 
 ```
 npx skills add https://github.com/davereid/skills
@@ -25,7 +25,7 @@ npx skills add https://github.com/davereid/skills
 Other ways:
 
 - With Composer, which also provides the `pr-fix` Taskfile tasks and CI workflow: `composer require --dev davereid/skills`
-- As a Claude Code plugin: `/plugin marketplace add davereid/skills`, then `/plugin install pr-skills@davereid`. The commands are then `/pr-skills:pr-fix` and `/pr-skills:pr-triage`.
+- As a Claude Code plugin: `/plugin marketplace add davereid/skills`, then `/plugin install pr-skills@davereid`. The commands are then `/pr-skills:pr-fix` and `/pr-skills:project-triage`.
 
 
 ## AI disclosure

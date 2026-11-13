@@ -1,6 +1,6 @@
 {
     "name": "davereid/skills",
-    "description": "Claude Code skills for pull requests: fix failing PRs in DDEV projects (with a Taskfile and CI workflow) and triage the PRs that need your review.",
+    "description": "Claude Code skills for pull requests: fix failing PRs in DDEV projects (with a Taskfile and CI workflow) and triage the PRs and issues that need your review or a reply.",
     "type": "library",
     "license": "MIT",
     "require": {},
@@ -10,9 +10,13 @@
                 "[project-root]/.claude/skills/pr-fix/SKILL.md": "skills/pr-fix/SKILL.md",
                 "[project-root]/.claude/skills/pr-fix/SETUP.md": "skills/pr-fix/SETUP.md",
                 "[project-root]/.claude/skills/pr-fix/README.md": "skills/pr-fix/README.md",
-                "[project-root]/.claude/skills/pr-triage/SKILL.md": "skills/pr-triage/SKILL.md",
-                "[project-root]/.claude/skills/pr-triage/README.md": "skills/pr-triage/README.md",
-                "[project-root]/.claude/skills/pr-triage/profile.example.md": "skills/pr-triage/profile.example.md"
+                "[project-root]/.claude/skills/project-triage/SKILL.md": "skills/project-triage/SKILL.md",
+                "[project-root]/.claude/skills/project-triage/README.md": "skills/project-triage/README.md",
+                "[project-root]/.claude/skills/project-triage/profile.example.md": "skills/project-triage/profile.example.md",
+                "[project-root]/.claude/skills/project-triage/issues.example.md": "skills/project-triage/issues.example.md",
+                "[project-root]/.claude/skills/project-triage/references/github.md": "skills/project-triage/references/github.md",
+                "[project-root]/.claude/skills/project-triage/references/gitlab.md": "skills/project-triage/references/gitlab.md",
+                "[project-root]/.claude/skills/project-triage/references/drupalorg.md": "skills/project-triage/references/drupalorg.md"
             }
         }
     }

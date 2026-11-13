@@ -23,7 +23,9 @@ tasks:
       - mkdir -p .claude/skills
       # shortcut: assumes Composer's default vendor/ folder; adjust the links if vendor-dir is customized.
       - ln -sfn ../../vendor/davereid/skills/skills/pr-fix .claude/skills/pr-fix
-      - ln -sfn ../../vendor/davereid/skills/skills/pr-triage .claude/skills/pr-triage
+      - ln -sfn ../../vendor/davereid/skills/skills/project-triage .claude/skills/project-triage
+      # Remove the link to the skill's old name (pr-triage), now dangling.
+      - if [ -L .claude/skills/pr-triage ]; then rm .claude/skills/pr-triage; fi
 
   install-workflow:
     desc: Copy the CI workflow template into .github/workflows (shows a diff if it already exists)

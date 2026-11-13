@@ -1,6 +1,6 @@
 ---
-# Copy to ~/.config/pr-triage/profile.md (all repos) or <repo>/.claude/pr-triage.md (one repo,
-# overrides the user file: lists replace, they don't merge).
+# Copy to ~/.config/project-triage/profile.md (all repos) or <repo>/.claude/project-triage.md
+# (one repo, overrides the user file: lists replace, they don't merge).
 match:
   paths:
     - "src/migrations/**"

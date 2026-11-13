@@ -1,6 +1,6 @@
 {
   "name": "pr-skills",
-  "description": "Claude Code skills for pull requests: pr-fix diagnoses and fixes failing PRs in DDEV projects, and pr-triage lists the PRs that need your review.",
+  "description": "Claude Code skills for pull requests: pr-fix diagnoses and fixes failing PRs in DDEV projects, and project-triage lists the PRs and issues that need your review or a reply.",
   "version": "0.1.0",
   "author": {
     "name": "Dave Reid"
