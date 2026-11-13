@@ -78,6 +78,10 @@ PR's own changes: `gh pr view <n> -R <repo> --json files,commits`. Re-fetch befo
 
 `gh pr view <n> -R <repo> --json body,files,commits`. File at the PR's head: `gh api repos/<repo>/contents/<path>?ref=<sha>`.
 
+## Check out a PR
+
+`git fetch origin pull/<n>/head` (works for PRs from forks too), then use `FETCH_HEAD` or the PR's `headRefOid`.
+
 ## Unresolved review threads
 
 Use the `reviewThreads` query from `pr-fix`'s "Review feedback" if that skill is installed (only `isResolved` is needed), or:

@@ -98,7 +98,11 @@ Up to four tables, in this order, omitting empty ones: A PRs, B PRs, A issues, B
 
 Under them: "N PRs not matching your profile" (and how many were excluded), "N issues waiting on others" (and how many were excluded), and which profile files were loaded. If the user gave a number, skip the tables.
 
-Then ask which items to handle now (multi-select, with "none"). Handle them one at a time.
+Then ask which items to handle now (multi-select, with "none"). Handle them strictly one at a time:
+
+- Show one item's summary, review and drafts per message, never several items' together. If the agent can run tasks in the background, start the reviews of the other selected PRs (e.g. `/code-review <n>`) in the background once the user picks them, and keep each result until its item comes up; otherwise run each review when its item comes up.
+- At each question about an item, the user can give feedback or ask for more investigation instead of picking an option (offer **Investigate further** alongside the step's options). Do what they ask, show the updated findings or draft, and ask again. Move on only when they've acted on the item or chosen **Skip**.
+- Between items, say which one is next and how many are left (e.g. "Next: #42, 2 of 3"), and let the user stop there.
 
 ### 6. A PR: summarize what changed since the user's review
 
@@ -137,7 +141,7 @@ In every review (A or B PRs), post a point that asks for a change to specific co
 
 ### 8. B PR: summarize and hand off
 
-Read the PR description, file list and commits. Say in a few lines what it does, why it's listed, how big it is, whether it has tests (see "Test coverage"), whether its title follows the project's format (see "PR title"), which issue it closes (see "Linked issue"), whether it discloses AI use (see "AI-assisted PRs"), whether it follows the conventions (see "Conventions"), whether it targets the default branch (see "Target branch and backports"), CI state, and who else has reviewed. Then ask: **Review it now** (run `/code-review <n>`, and come back to approve, request changes or comment from that), **Comment**, **Skip**. If the PR is bot-authored or labeled `dependencies`, has failing checks, and the `pr-fix` skill is available (listed as `pr-fix`, or `pr-skills:pr-fix` when installed as a plugin) and supports this host (see its `SKILL.md`), also offer **Fix it** (run it with `<n>`). That skill asks before every commit, push and comment, and only works on PRs opened by a bot or by the user, from a branch in the same repository, so it refuses the PR if it's anyone else's. Never run it unless the user chooses it. Comments follow Conventional Comments, with the text shown first.
+Read the PR description, file list and commits. Say in a few lines what it does, why it's listed, how big it is, whether it has tests (see "Test coverage"), whether its title follows the project's format (see "PR title"), which issue it closes (see "Linked issue"), missing context links (see "Context and links"), whether it discloses AI use (see "AI-assisted PRs"), whether it follows the conventions (see "Conventions"), what the security review found (see "Security review"), simpler or existing code it could use (see "Simpler or existing code"), whether it targets the default branch (see "Target branch and backports"), CI state, and who else has reviewed. Then ask: **Review it now** (run `/code-review <n>` and the security review, and come back to approve, request changes or comment from that), **Comment**, **Skip**. If the PR is bot-authored or labeled `dependencies`, has failing checks, and the `pr-fix` skill is available (listed as `pr-fix`, or `pr-skills:pr-fix` when installed as a plugin) and supports this host (see its `SKILL.md`), also offer **Fix it** (run it with `<n>`). That skill asks before every commit, push and comment, and only works on PRs opened by a bot or by the user, from a branch in the same repository, so it refuses the PR if it's anyone else's. Never run it unless the user chooses it. Comments follow Conventional Comments, with the text shown first.
 
 #### Test coverage
 
@@ -168,17 +172,44 @@ A PR that resolves an issue should say so with the host's closing keyword (e.g. 
 - **Issue named but no closing keyword:** fine if the description says the PR only partly addresses it, or that follow-ups remain (say so). Otherwise flag "no closing reference for #<n>".
 - **No issue found:** say "no linked issue". Fine for small changes; don't ask for one.
 
-When it's flagged, offer **Add closing reference**: in an owned repo, edit the description, adding the line to its description section (or at the top when it has none) and changing nothing else; show the full new description first and use the reference's "Edit a PR's description" command. Otherwise include it in the review as `**chore:** Add "Closes #<n>" to the description so merging closes the issue.` Check again before merging, when the user asks for a merge.
+When it's flagged, offer **Add closing reference**: in an owned repo, edit the description, adding the line near the top: at the end of its description or summary section (e.g. `## Description`), or as the first line when it has none, never after the testing steps or footer and changing nothing else; show the full new description first and use the reference's "Edit a PR's description" command. Otherwise include it in the review as `**chore:** Add "Closes #<n>" to the description so merging closes the issue.` Check again before merging, when the user asks for a merge.
+
+#### Context and links
+
+A reader of the PR, or of the code years later, should be able to find why it was done this way. Check for the links that context needs:
+
+- **In the description:** the issue it resolves (see "Linked issue"), and for changes that follow or work around something else, a link to it: the upstream issue or release, the documentation or spec it implements, a change record or deprecation notice it follows, a security advisory it fixes.
+- **In the code:** a workaround or temporary code has a `@todo` (or the project's equivalent) linking the upstream issue that will make it unnecessary; code that implements a spec, a third-party API's quirk or a non-obvious decision has a comment linking the source; copied code says where it came from.
+
+Report missing links as `**suggestion (non-blocking):** Link <what> so <who> can find <why>.` Suggest the actual link when you found it (e.g. from "Check upstream"). Don't ask for links on self-explanatory changes.
 
 #### AI-assisted PRs
 
 When the description, a commit message or a comment discloses AI use (e.g. an "AI disclosure" section, "Generated with" or "Co-Authored-By" an AI tool), review the code more skeptically, for the whole PR and for an A PR's new commits:
 
 - **Verify every claim:** that the APIs, functions, options and config keys it uses exist in the versions the project supports, that it does what the description says, and that the tests test the change rather than only passing. Apply "Verify before commenting" to each.
-- **Simpler or existing code:** look for code that reimplements something the project, its framework or a dependency already provides (a helper, a service, a base class, a library function), abstractions or options nobody asked for, and code that could be shorter. Name the existing API in the suggestion.
-- **Conventions:** check it as "Conventions" below says, more closely.
+- **Simpler or existing code** and **Conventions:** check them as the sections below say, more closely.
 
 Say in the summary that the PR discloses AI use and that it was reviewed this way. A disclosure isn't a problem in itself: never criticize the author for it.
+
+#### Simpler or existing code
+
+In every review, look for code that reimplements something the project, its framework or a dependency already provides (a helper, a service, a base class, a library function), abstractions or options nobody asked for, and code that could be shorter. For a workaround or a copy of upstream code, check whether a newer upstream release already has the fix or API (see "Check upstream" in step 9). Name the existing API or release in the suggestion, as `**suggestion (non-blocking):**`, and say what you checked (e.g. the helper's signature at the PR's base).
+
+#### Security review
+
+Review every PR's changes for security problems: injection (SQL, shell, template), cross-site scripting and missing output escaping, missing access checks, CSRF on state-changing routes, unsafe deserialization or file handling, secrets in code or config, and dependency changes with known advisories (the host's reference, "Security"). Use the agent's security review command or skill if it has one, run in the review checkout (see "Review checkout"), otherwise review the diff yourself. Verify each finding as "Verify before commenting" says.
+
+- A problem the PR **introduces** in unreleased code is an ordinary review finding: comment on the PR, as `**issue (blocking):**`.
+- A problem in code that's **already released** (the PR touches it, or reveals it) is a vulnerability: follow the Security rule in "Rules", and don't describe it in the PR.
+
+Say in the summary what was reviewed and that nothing was found, if so.
+
+#### Review checkout
+
+To verify findings locally (read files in context, run `grep`, `git apply --check`, the project's linters or tests), check the PR's head out into a scratch worktree outside the repository, never in the user's working copy: fetch the head (the host's reference, "Check out a PR"), then `git worktree add --detach <scratch dir> <sha>`. Remove it with `git worktree remove` when the item is done.
+
+Reading and static checks are fine. Running anything from the PR (tests, build scripts, Composer or npm scripts, git hooks) runs its author's code: in a repo the user doesn't own, or from an author outside the project, ask first and say so, and prefer the project's isolated environment (e.g. its DDEV or Docker setup) over the host.
 
 #### Conventions
 

@@ -77,6 +77,10 @@ MRs the user reviewed or authored: `merge_requests?scope=all&reviewer_username=$
 
 `glab mr view <iid> -R <repo> -F json` (description, author, labels), its diffs and commits. File at the head: `projects/:id/repository/files/<path>/raw?ref=<sha>`.
 
+## Check out a PR
+
+`git fetch origin merge-requests/<iid>/head` (works for MRs from forks, including drupal.org issue forks, when `origin` is the target project), then use `FETCH_HEAD` or the MR's `sha`.
+
 ## Unresolved threads
 
 `projects/:id/merge_requests/<iid>/discussions?per_page=100`: count discussions whose notes are `resolvable` and not `resolved`. A diff note is outdated when its `position.head_sha` differs from the MR's head and the lines changed (the MR's diff view shows it as such). Resolve one: `glab api --hostname <host> -X PUT "projects/:id/merge_requests/<iid>/discussions/<discussion id>?resolved=true"`.
