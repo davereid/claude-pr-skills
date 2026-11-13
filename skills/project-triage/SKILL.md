@@ -29,6 +29,7 @@ With `--mine`, it lists the user's own open PRs instead, with what each is waiti
 
 - Everything here is a draft for the user to verify. Say which commits, files or comments you did not read in detail.
 - Never write to a PR or issue (approve, comment, request changes, dismiss, close, change its status or labels) without the user's explicit answer for that item. Show the exact text first.
+- End every review body, PR or MR comment, and issue reply you post with a disclosure line, after a blank line, in italics, naming the agent running this skill (e.g. Claude Code, Codex, Cursor) and summarizing the user's part in one sentence, from what they did in this session: the decisions they made or directed (the approach, which findings to raise, approve or request changes), what they checked or had checked, and their edits. E.g. `_Drafted with <agent> using [project-triage](https://github.com/davereid/skills/tree/main/skills/project-triage). I chose which findings to raise, had each checked against the code, and reviewed the final text._` Don't claim anything the user didn't do. Inline comments are covered by their review's line; on hosts where they're posted separately, the general comment posted with them carries it. Include it in the draft you show, so the user can edit or drop it.
 - Always show the change summary (step 6) before asking what to do with an A PR. No size threshold: small changes can change a PR's meaning, so don't skip or pre-select an option because a change looks small.
 - Skip the user's own PRs and issues, and draft PRs, except with `--mine`.
 - Never approve a B PR: the user hasn't reviewed it. Offer a full review instead.
@@ -110,8 +111,8 @@ Show, in this order:
 1. PR title, author, link, the user's last review state and date, reviewed commit → current head (7 characters each).
 2. **What changed:** plain-language summary, commits one per line, files with +/- counts. Flag when all new commits are base merges.
 3. **How it affects the PR:** does it change behavior, scope or purpose; does it touch what the user originally reviewed; or is it only tests, docs, formatting or a base merge.
-4. **Your earlier review:** for changes requested and commented, list the user's earlier points (review body and inline comments) and say for each whether the new commits address it, partly address it, or not. Note author replies and thread resolutions.
-5. **Tests:** whether the new commits keep the PR's fix or feature covered (see "Test coverage" in step 8).
+4. **Your earlier review:** for changes requested and commented, list the user's earlier points (review body and inline comments) and say for each whether the new commits address it, partly address it, or not. Note author replies and thread resolutions. For each of the user's inline threads, read whether it's outdated (its lines changed) or resolved (the reference's "Unresolved review threads"): an outdated thread is a lead, not proof, so read the new code before calling it addressed. When the user approves or keeps requesting changes, offer to resolve the user's own threads you found addressed, listed first.
+5. **Tests:** whether the new commits keep the PR's fix or feature covered (see "Test coverage" in step 8). Check the new commits against "Conventions" (step 8); if the PR discloses AI use, review them as "AI-assisted PRs" says.
 6. **Linked issue** and **target branch:** see "Linked issue" and "Target branch and backports" in step 8.
 7. **Worth a closer look:** anything risky or surprising, new review comments from others, CI state, other reviewers' open change requests.
 
@@ -125,7 +126,9 @@ Ask, with options by the user's last review (every case also offers **Show full 
 - Changes requested: **Approve** (changes addressed), **Keep requesting changes**, **Comment**, **Skip**.
 - Commented: **Approve**, **Request changes**, **Comment**, **Skip**.
 
-Before drafting text, apply "Verify before commenting" (in step 8) to each earlier point you're about to call addressed or still open, and to any new finding. Then fetch the PR's reviews and comments again: the user or others may have posted since the summary, e.g. after a `/code-review` hand-off. If the user already posted a review, summarize it and ask what's left instead of drafting a duplicate. Show the exact text and resulting state, get the user's go-ahead, then run. Every review body follows [Conventional Comments](https://conventionalcomments.org): `**<label> (<decorations>):** <subject>`, label in bold. Labels: `praise`, `nitpick`, `suggestion`, `issue`, `todo`, `question`, `thought`, `chore`, `note`. Decorations: `blocking`, `non-blocking`, `if-minor`. One line per point.
+Before drafting text, apply "Verify before commenting" (in step 8) to each earlier point you're about to call addressed or still open, and to any new finding. Then fetch the PR's reviews and comments again: the user or others may have posted since the summary, e.g. after a `/code-review` hand-off. If the user already posted a review, summarize it and ask what's left instead of drafting a duplicate. Show the exact text and resulting state, get the user's go-ahead, then run. Every review body follows [Conventional Comments](https://conventionalcomments.org): `**<label> (<decorations>):** <subject>`, label in bold. Labels: `praise`, `nitpick`, `suggestion`, `issue`, `todo`, `question`, `thought`, `chore`, `note`. Decorations: `blocking`, `non-blocking`, `if-minor`. One paragraph per point, separated by blank lines: GitHub and GitLab join consecutive lines into one paragraph.
+
+In every review (A or B PRs), post a point that asks for a change to specific code as an inline comment on that line or range of the diff, with the same label and decorations, submitted together with the review (the host's reference, "Actions"). Inline threads show as outdated when the author changes those lines, and can be resolved one by one, so the next review can see what's left. This includes tests to add when the diff has related tests to anchor them to. Keep general points in the review body, such as the overall approach or the title and description. Inline comments can only go on lines the diff shows: a point about other code goes in the body, naming its file and line. Show each inline comment with its file and line in the draft.
 
 - Approve, e.g. `**praise:** My earlier comments are addressed in <new7>.` Warn first if required checks are failing, or another reviewer's change request still blocks the PR.
 - Request changes, e.g. `**issue (blocking):** <what's still open>` (the author sees it, and it replaces an earlier approval).
@@ -134,7 +137,7 @@ Before drafting text, apply "Verify before commenting" (in step 8) to each earli
 
 ### 8. B PR: summarize and hand off
 
-Read the PR description, file list and commits. Say in a few lines what it does, why it's listed, how big it is, whether it has tests (see "Test coverage"), which issue it closes (see "Linked issue"), whether it targets the default branch (see "Target branch and backports"), CI state, and who else has reviewed. Then ask: **Review it now** (run `/code-review <n>`, and come back to approve, request changes or comment from that), **Comment**, **Skip**. If the PR is bot-authored or labeled `dependencies`, has failing checks, and the `pr-fix` skill is available (listed as `pr-fix`, or `pr-skills:pr-fix` when installed as a plugin) and supports this host (see its `SKILL.md`), also offer **Fix it** (run it with `<n>`). That skill asks before every commit, push and comment, and only works on PRs opened by a bot or by the user, from a branch in the same repository, so it refuses the PR if it's anyone else's. Never run it unless the user chooses it. Comments follow Conventional Comments, with the text shown first.
+Read the PR description, file list and commits. Say in a few lines what it does, why it's listed, how big it is, whether it has tests (see "Test coverage"), which issue it closes (see "Linked issue"), whether it discloses AI use (see "AI-assisted PRs"), whether it follows the conventions (see "Conventions"), whether it targets the default branch (see "Target branch and backports"), CI state, and who else has reviewed. Then ask: **Review it now** (run `/code-review <n>`, and come back to approve, request changes or comment from that), **Comment**, **Skip**. If the PR is bot-authored or labeled `dependencies`, has failing checks, and the `pr-fix` skill is available (listed as `pr-fix`, or `pr-skills:pr-fix` when installed as a plugin) and supports this host (see its `SKILL.md`), also offer **Fix it** (run it with `<n>`). That skill asks before every commit, push and comment, and only works on PRs opened by a bot or by the user, from a branch in the same repository, so it refuses the PR if it's anyone else's. Never run it unless the user chooses it. Comments follow Conventional Comments, with the text shown first.
 
 #### Test coverage
 
@@ -154,6 +157,28 @@ A PR that resolves an issue should say so with the host's closing keyword (e.g. 
 - **No issue found:** say "no linked issue". Fine for small changes; don't ask for one.
 
 When it's flagged, offer **Add closing reference**: in an owned repo, edit the description, adding the line to its description section (or at the top when it has none) and changing nothing else; show the full new description first and use the reference's "Edit a PR's description" command. Otherwise include it in the review as `**chore:** Add "Closes #<n>" to the description so merging closes the issue.` Check again before merging, when the user asks for a merge.
+
+#### AI-assisted PRs
+
+When the description, a commit message or a comment discloses AI use (e.g. an "AI disclosure" section, "Generated with" or "Co-Authored-By" an AI tool), review the code more skeptically, for the whole PR and for an A PR's new commits:
+
+- **Verify every claim:** that the APIs, functions, options and config keys it uses exist in the versions the project supports, that it does what the description says, and that the tests test the change rather than only passing. Apply "Verify before commenting" to each.
+- **Simpler or existing code:** look for code that reimplements something the project, its framework or a dependency already provides (a helper, a service, a base class, a library function), abstractions or options nobody asked for, and code that could be shorter. Name the existing API in the suggestion.
+- **Conventions:** check it as "Conventions" below says, more closely.
+
+Say in the summary that the PR discloses AI use and that it was reviewed this way. A disclosure isn't a problem in itself: never criticize the author for it.
+
+#### Conventions
+
+Check every reviewed PR's code against two sources, and report what doesn't follow them, citing the rule and where it's written:
+
+1. **The project's conventions:** its instruction files and docs (`AGENTS.md`, `CLAUDE.md`, contributing docs), linter and coding-standard config, and how its existing code does the same thing.
+2. **The user's global instruction files.** Rules only these files have are the user's preferences: word them as such (see "Convention claims" below).
+
+How they combine depends on ownership:
+
+- **Owned repo:** both apply. The user sets the project's direction, so their global rules can be raised like project rules, though still worded as their preference when the repo doesn't write them down.
+- **Not owned:** the project's conventions come first. Raise a global rule only where the project has no convention of its own on that point, as a non-blocking suggestion, and drop it where it conflicts with what the project does.
 
 #### Target branch and backports
 
