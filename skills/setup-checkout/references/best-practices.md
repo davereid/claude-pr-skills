@@ -28,6 +28,7 @@ What `setup-checkout` compares a project against. Each item says what to check a
 - **`composer.json` exists**, with the project's name (`drupal/<name>`), type and license.
 - **CI can install the dependencies.** CI builds the test site from `composer.json` alone and ignores `.info.yml`, so each `.info.yml` dependency on another drupal.org project (`project:module`) is also in `require-dev`, as `"*"` unless a version is needed. A minimum version goes in `require`, not in `.info.yml`.
 - **Optional integrations are installable too.** Modules the code integrates with but doesn't require (e.g. in tests or a submodule) are in `require-dev`.
+- **Drush is available.** `require-dev` has `"drush/drush": "*"`, so `ddev drush` works.
 
 
 ## Tests
