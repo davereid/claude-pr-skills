@@ -9,7 +9,7 @@ Claude Code skills for working with pull requests.
 ## Skills
 
 - [pr-fix](skills/pr-fix/README.md): diagnoses and fixes failing pull requests in DDEV projects, from bots such as Renovate and Dependabot or your own, works through open review feedback, and pushes only after you approve.
-- [project-triage](skills/project-triage/README.md) (formerly `pr-triage`): lists the open PRs and issues that need your attention, on GitHub, GitLab and drupal.org: everything from others in repositories you own, administer or collaborate on directly, and elsewhere the PRs that match a profile of your skill set and the issues assigned to you. It summarizes what changed since your last review or comment, and offers to approve, comment or hand off to a full review. With `--mine`, it shows what your own PRs are waiting on.
+- [project-triage](skills/project-triage/README.md): lists the open PRs and issues that need your attention, on GitHub, GitLab and drupal.org: everything from others in repositories you own, administer or collaborate on directly, and elsewhere the PRs that match a profile of your skill set and the issues assigned to you. It summarizes what changed since your last review or comment, and offers to approve, comment or hand off to a full review. With `--mine`, it shows what your own PRs are waiting on.
 
 
 ## Installation

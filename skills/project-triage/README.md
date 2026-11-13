@@ -1,6 +1,6 @@
 # project-triage
 
-An agent skill that lists the open pull requests and issues that need your attention, and helps you act on them. Formerly `pr-triage`.
+An agent skill that lists the open pull requests and issues that need your attention, and helps you act on them.
 
 It works on GitHub and GitHub Enterprise (`gh`), GitLab (`glab`), and drupal.org projects (`glab` on `git.drupalcode.org`, plus the `drupalorg` CLI). It picks the host from the checkout's `origin` remote, and keeps each host's commands in `references/`. On drupal.org it groups merge requests with their issues, shows each issue's status, and can set the status with your comment. For projects still on drupal.org's issue queue, such as core, it drafts comments for you to post.
 
@@ -38,7 +38,7 @@ Read access is enough to triage; write access is only used for actions you appro
 
 ## Installation
 
-As part of the plugin, with `npx skills` or with Composer: see the [main README](../../README.md#installation). With Composer, `task pr:install-skill` symlinks the skill into `.claude/skills/` (and removes an old `pr-triage` link).
+As part of the plugin, with `npx skills` or with Composer: see the [main README](../../README.md#installation). With Composer, `task pr:install-skill` symlinks the skill into `.claude/skills/`.
 
 Optionally, create a profile (see below).
 
