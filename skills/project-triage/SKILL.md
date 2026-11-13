@@ -141,7 +141,7 @@ In every review (A or B PRs), post a point that asks for a change to specific co
 
 ### 8. B PR: summarize and hand off
 
-Read the PR description, file list and commits. Say in a few lines what it does, why it's listed, how big it is, whether it has tests (see "Test coverage"), whether its title follows the project's format (see "PR title"), which issue it closes (see "Linked issue"), missing context links (see "Context and links"), whether it discloses AI use (see "AI-assisted PRs"), whether it follows the conventions (see "Conventions"), what the security review found (see "Security review"), simpler or existing code it could use (see "Simpler or existing code"), whether it targets the default branch (see "Target branch and backports"), CI state, and who else has reviewed. Then ask: **Review it now** (run `/code-review <n>` and the security review, and come back to approve, request changes or comment from that), **Comment**, **Skip**. If the PR is bot-authored or labeled `dependencies`, has failing checks, and the `pr-fix` skill is available (listed as `pr-fix`, or `pr-skills:pr-fix` when installed as a plugin) and supports this host (see its `SKILL.md`), also offer **Fix it** (run it with `<n>`). That skill asks before every commit, push and comment, and only works on PRs opened by a bot or by the user, from a branch in the same repository, so it refuses the PR if it's anyone else's. Never run it unless the user chooses it. Comments follow Conventional Comments, with the text shown first.
+Read the PR description, file list and commits. Say in a few lines what it does, why it's listed, how big it is, whether it has tests (see "Test coverage"), whether its title follows the project's format (see "PR title"), which issue it closes (see "Linked issue"), missing context links (see "Context and links"), whether it discloses AI use (see "AI-assisted PRs"), whether it follows the conventions (see "Conventions"), what the security review found (see "Security review"), simpler or existing code it could use (see "Simpler or existing code"), the sniff test (see "Sniff test"), whether it targets the default branch (see "Target branch and backports"), CI state, and who else has reviewed. Then ask: **Review it now** (run `/code-review <n>` and the security review, and come back to approve, request changes or comment from that), **Comment**, **Skip**. If the PR is bot-authored or labeled `dependencies`, has failing checks, and the `pr-fix` skill is available (listed as `pr-fix`, or `pr-skills:pr-fix` when installed as a plugin) and supports this host (see its `SKILL.md`), also offer **Fix it** (run it with `<n>`). That skill asks before every commit, push and comment, and only works on PRs opened by a bot or by the user, from a branch in the same repository, so it refuses the PR if it's anyone else's. Never run it unless the user chooses it. Comments follow Conventional Comments, with the text shown first.
 
 #### Test coverage
 
@@ -188,13 +188,28 @@ Report missing links as `**suggestion (non-blocking):** Link <what> so <who> can
 When the description, a commit message or a comment discloses AI use (e.g. an "AI disclosure" section, "Generated with" or "Co-Authored-By" an AI tool), review the code more skeptically, for the whole PR and for an A PR's new commits:
 
 - **Verify every claim:** that the APIs, functions, options and config keys it uses exist in the versions the project supports, that it does what the description says, and that the tests test the change rather than only passing. Apply "Verify before commenting" to each.
-- **Simpler or existing code** and **Conventions:** check them as the sections below say, more closely.
+- **Simpler or existing code**, **Sniff test** and **Conventions:** check them as the sections below say, more closely.
 
 Say in the summary that the PR discloses AI use and that it was reviewed this way. A disclosure isn't a problem in itself: never criticize the author for it.
 
 #### Simpler or existing code
 
 In every review, look for code that reimplements something the project, its framework or a dependency already provides (a helper, a service, a base class, a library function), abstractions or options nobody asked for, and code that could be shorter. For a workaround or a copy of upstream code, check whether a newer upstream release already has the fix or API (see "Check upstream" in step 9). Name the existing API or release in the suggestion, as `**suggestion (non-blocking):**`, and say what you checked (e.g. the helper's signature at the PR's base).
+
+#### Sniff test
+
+In every review, check whether the code is proportionate and clean, using signs you can point to in the diff:
+
+- **Size vs. purpose:** the diff is much bigger than the problem (many files for a small fix, new layers for one caller).
+- **Defensive noise:** checks for values that can't be null or the wrong type, try/catch blocks that swallow errors, redundant casts.
+- **Over-abstraction:** an interface with one implementation, factories, options or config nobody uses, helpers called once.
+- **Comment noise:** comments that restate the code, docblocks that paraphrase the name, changelog-style comments ("Added X to fix Y").
+- **Dead or stray code:** unused parameters, imports or variables, unreachable branches, unrelated reformatting or renames.
+- **Out of place:** naming, patterns or error handling unlike the surrounding code.
+- **Hollow tests:** tests that mock everything, mirror the implementation, or assert something trivially true.
+- **Description vs. diff:** the description claims things the diff doesn't do, or leaves out things it does.
+
+Say in the summary "Sniff test: proportionate", or how many signs and the main ones (e.g. "Sniff test: 3 signs: defensive noise in `Foo.php`, …"). Raise a few signs as inline questions citing the line (`**question (non-blocking):** Can this be null here? …`). With many, post one comment asking for a simpler pass with the two or three clearest examples, rather than a comment per line. Judge the code, never its author: don't call it "AI-written" or "sloppy".
 
 #### Security review
 
