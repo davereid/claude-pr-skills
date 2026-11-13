@@ -87,6 +87,10 @@ MRs the user reviewed or authored: `merge_requests?scope=all&reviewer_username=$
 
 Your own MRs: `projects/:id/merge_requests?state=opened&author_username=$ME&per_page=100`, with `detailed_merge_status` and the reviewer states.
 
+## Out-of-date branch
+
+`projects/:id/merge_requests/<iid>?include_diverged_commits_count=true`: `diverged_commits_count` is how many commits the target branch has that the MR's branch doesn't, and `has_conflicts` is true when it conflicts. `detailed_merge_status` `need_rebase` means the project requires an up-to-date branch.
+
 ## Actions
 
 - Approve: `glab mr approve <iid> -R <repo>`, then the comment as a note.
@@ -100,6 +104,7 @@ Your own MRs: `projects/:id/merge_requests?state=opened&author_username=$ME&per_
 - Retarget: `glab mr update <iid> -R <repo> --target-branch <branch>`.
 - Pending workflow runs: MRs from forks don't start a pipeline in the parent project until a member runs one (the MR's **Pipelines** tab, **Run pipeline**). If the MR has no pipeline for its head (`glab api --hostname <host> "projects/:id/merge_requests/<iid>/pipelines"`), tell the user and give them that link; starting one through the API isn't verified.
 - Retitle a PR: `glab mr update <iid> -R <repo> --title "<title>"`. A title check job in a merge request pipeline doesn't re-run on a title edit: say a new pipeline is needed.
+- Update branch: GitLab has no button that merges the target branch in. Its **Rebase** button (below) is the update, and it rewrites the MR's commits like a force-push.
 - Rebase: `glab api --hostname <host> -X PUT "projects/:id/merge_requests/<iid>/rebase"`, then check `merge_requests/<iid>?include_rebase_in_progress=true` until `rebase_in_progress` is false and `merge_error` is null. Needs push access to the source branch; GitLab refuses it when `has_conflicts` is true.
 
 ## Supported branches

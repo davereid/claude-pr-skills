@@ -94,6 +94,10 @@ The user's threads are those whose first comment's author is `$ME`. Resolve one:
 
 Your own PRs: `gh pr list -R <repo> --state open --author @me --limit 100 --json number,title,url,body,isDraft,reviewDecision,reviewRequests,reviews,headRefOid,updatedAt`.
 
+## Out-of-date branch
+
+Commits the base has that the PR's branch doesn't: `gh api repos/<repo>/compare/<baseRefName>...<headRefOid> -q .behind_by` (for a fork PR, `<owner>:<headRefName>` in place of the SHA if the SHA isn't found). Conflicts: `gh pr view <n> -R <repo> --json mergeable` is `CONFLICTING`; `UNKNOWN` means GitHub hasn't worked it out yet (often a conflict), so say "may conflict".
+
 ## Actions
 
 - Approve: `gh pr review <n> -R <repo> --approve --body "<text>"`
@@ -111,6 +115,7 @@ Your own PRs: `gh pr list -R <repo> --state open --author @me --limit 100 --json
 - Edit a PR's description: `gh pr edit <n> -R <repo> --body-file <file>`, after all edits to the file have succeeded.
 - Retarget: `gh pr edit <n> -R <repo> --base <branch>`.
 - Retitle a PR: `gh pr edit <n> -R <repo> --title "<title>"`. A title check workflow re-runs only if it triggers on `pull_request` `edited`. On PRs from forks, the new run may wait for approval (see "Pending workflow runs"). An edit to the description also triggers `edited` runs, so retitle before editing the description.
+- Update branch (the PR's **Update branch** button): `gh pr update-branch <n> -R <repo>` merges the base into the PR's branch on GitHub, with no force-push. Needs push access to the head branch. The new head can take a few seconds to show in `gh pr view`.
 - Rebase: `gh pr update-branch <n> -R <repo> --rebase`. Needs push access to the head branch (for a fork, "Allow edits from maintainers").
 
 ## Supported branches

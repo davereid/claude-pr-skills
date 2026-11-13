@@ -297,12 +297,13 @@ Fetch the user's own open PRs, including drafts. For each, count its unresolved 
 - **Changes requested** by whom (the overall review decision, and the reviewers whose latest review requests changes).
 - **N unresolved threads**.
 - **CI failing**, with the failed checks.
+- **Out of date**: N commits behind its base, or **conflicts** with it (the host's reference, "Out-of-date branch").
 - **N remaining tasks** in the description: unchecked task list items (`- [ ]`) and items under a heading such as "Remaining tasks" or "TODO".
 - **Waiting for review** from the requested users and teams, or **no reviewer** if there's none and no approval.
 - **Approved**, when nothing above applies. Say it's ready to merge, but never merge it.
 - **Draft**.
 
-Ask which PRs to handle now (multi-select, with "none"). For each: list the open feedback (reviewer, link, one line each, marking comments from outside the repo's collaborators or from bots), the failed checks, and the remaining tasks, saying for each task whether it looks needed to finish the PR and whether it's a code change. If there's feedback, a failing check or a remaining code task, and the `pr-fix` skill is available and supports this host, offer **Fix it** (run it with `<n>`), **Show the threads** in full, and **Skip**. Never run `pr-fix` unless the user chooses it. Without `pr-fix`, summarize and skip.
+Ask which PRs to handle now (multi-select, with "none"). For each: list the open feedback (reviewer, link, one line each, marking comments from outside the repo's collaborators or from bots), the failed checks, and the remaining tasks, saying for each task whether it looks needed to finish the PR and whether it's a code change. If the branch is out of date without conflicts, offer **Update branch**, with the reference's "Update branch" command, after saying what it does: whether it merges the base in or rebases (which rewrites the PR's commits like a force-push, so follow the user's instructions on force-pushing, and say whose commits it rewrites). Once it's done, check that the head changed and report the new checks. If there's feedback, a failing check, a remaining code task or a conflicting branch, and the `pr-fix` skill is available and supports this host, offer **Fix it** (run it with `<n>`; say which of these it will fix, and for a conflicting branch that it merges the base in, or rebases only if the user's instructions allow force-pushing), **Show the threads** in full, and **Skip**. Never run `pr-fix` unless the user chooses it. Without `pr-fix`, summarize and skip.
 
 ### Your own issues (`--mine --issues`)
 
