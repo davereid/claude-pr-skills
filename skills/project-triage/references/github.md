@@ -113,7 +113,7 @@ Commits the base has that the PR's branch doesn't: `gh api repos/<repo>/compare/
 - Comment on an issue: `gh issue comment <n> -R <repo> --body "<text>"`
 - Close an issue: `gh issue close <n> -R <repo> --reason "<completed|not planned>"` after the comment.
 - Edit a PR's description: `gh pr edit <n> -R <repo> --body-file <file>`, after all edits to the file have succeeded.
-- Retarget: `gh pr edit <n> -R <repo> --base <branch>`.
+- Retarget: `gh pr edit <n> -R <repo> --base <branch>`. Before retargeting, compare `gh api repos/<repo>/compare/<branch>...<headRefOid> -q .ahead_by` with the PR's commit count (`gh pr view <n> -R <repo> --json commits -q '.commits | length'`): when `ahead_by` is larger, the branch started from another branch.
 - Retitle a PR: `gh pr edit <n> -R <repo> --title "<title>"`. A title check workflow re-runs only if it triggers on `pull_request` `edited`. On PRs from forks, the new run may wait for approval (see "Pending workflow runs"). An edit to the description also triggers `edited` runs, so retitle before editing the description.
 - Update branch (the PR's **Update branch** button): `gh pr update-branch <n> -R <repo>` merges the base into the PR's branch on GitHub, with no force-push. Needs push access to the head branch. The new head can take a few seconds to show in `gh pr view`.
 - Rebase: `gh pr update-branch <n> -R <repo> --rebase`. Needs push access to the head branch (for a fork, "Allow edits from maintainers").

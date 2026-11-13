@@ -101,7 +101,7 @@ Your own MRs: `projects/:id/merge_requests?state=opened&author_username=$ME&per_
 - Comment on an issue: `glab issue note <iid> -R <repo> -m "<text>"`
 - Close an issue: `glab issue close <iid> -R <repo>` after the comment.
 - Edit an MR's description: `glab mr update <iid> -R <repo> --description-file <file>`, after all edits to the file have succeeded.
-- Retarget: `glab mr update <iid> -R <repo> --target-branch <branch>`.
+- Retarget: `glab mr update <iid> -R <repo> --target-branch <branch>`. Before retargeting, compare the number of commits in `projects/:id/repository/compare?from=<branch>&to=<sha>` (its `commits` array) with the MR's own (`projects/:id/merge_requests/<iid>/commits`): when the compare has more, the branch started from another branch.
 - Pending workflow runs: MRs from forks don't start a pipeline in the parent project until a member runs one (the MR's **Pipelines** tab, **Run pipeline**). If the MR has no pipeline for its head (`glab api --hostname <host> "projects/:id/merge_requests/<iid>/pipelines"`), tell the user and give them that link; starting one through the API isn't verified.
 - Retitle a PR: `glab mr update <iid> -R <repo> --title "<title>"`. A title check job in a merge request pipeline doesn't re-run on a title edit: say a new pipeline is needed.
 - Update branch: GitLab has no button that merges the target branch in. Its **Rebase** button (below) is the update, and it rewrites the MR's commits like a force-push.
