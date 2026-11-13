@@ -94,6 +94,8 @@ Your own MRs: `projects/:id/merge_requests?state=opened&author_username=$ME&per_
 - Close an issue: `glab issue close <iid> -R <repo>` after the comment.
 - Edit an MR's description: `glab mr update <iid> -R <repo> --description-file <file>`, after all edits to the file have succeeded.
 - Retarget: `glab mr update <iid> -R <repo> --target-branch <branch>`.
+- Pending workflow runs: MRs from forks don't start a pipeline in the parent project until a member runs one (the MR's **Pipelines** tab, **Run pipeline**). If the MR has no pipeline for its head (`glab api --hostname <host> "projects/:id/merge_requests/<iid>/pipelines"`), tell the user and give them that link; starting one through the API isn't verified.
+- Retitle a PR: `glab mr update <iid> -R <repo> --title "<title>"`. A title check job in a merge request pipeline doesn't re-run on a title edit: say a new pipeline is needed.
 - Rebase: `glab api --hostname <host> -X PUT "projects/:id/merge_requests/<iid>/rebase"`, then check `merge_requests/<iid>?include_rebase_in_progress=true` until `rebase_in_progress` is false and `merge_error` is null. Needs push access to the source branch; GitLab refuses it when `has_conflicts` is true.
 
 ## Supported branches

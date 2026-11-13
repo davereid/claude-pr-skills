@@ -106,6 +106,7 @@ Your own PRs: `gh pr list -R <repo> --state open --author @me --limit 100 --json
 - Close an issue: `gh issue close <n> -R <repo> --reason "<completed|not planned>"` after the comment.
 - Edit a PR's description: `gh pr edit <n> -R <repo> --body-file <file>`, after all edits to the file have succeeded.
 - Retarget: `gh pr edit <n> -R <repo> --base <branch>`.
+- Retitle a PR: `gh pr edit <n> -R <repo> --title "<title>"`. A title check workflow re-runs only if it triggers on `pull_request` `edited`. On PRs from forks, the new run may wait for approval (see "Pending workflow runs"). An edit to the description also triggers `edited` runs, so retitle before editing the description.
 - Rebase: `gh pr update-branch <n> -R <repo> --rebase`. Needs push access to the head branch (for a fork, "Allow edits from maintainers").
 
 ## Supported branches
@@ -134,6 +135,10 @@ The `gh` token only needs read access to triage. Write access is needed only for
   - `--all` searches only repos the token can read.
 - Team membership (`gh api user/teams`) may be unavailable to a fine-grained token. If it fails, the skill falls back to direct review requests.
 - If a read call fails with a 403 or 404 on a repo the user can open, suggest checking the token's permissions and repo access before assuming the data doesn't exist.
+
+## Pending workflow runs
+
+`gh run list -R <repo> --branch <headRefName> --json databaseId,workflowName,event,conclusion,headSha` and keep runs with `conclusion` `action_required` (for a fork PR, `--branch` is the fork's branch name, so also match `headSha` to the PR's head). Approve one: `gh api -X POST repos/<repo>/actions/runs/<id>/approve`. Runs of the same workflow that a newer run superseded show as `cancelled`; only the newest counts.
 
 ## Reading CI results
 

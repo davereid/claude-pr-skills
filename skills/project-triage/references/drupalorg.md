@@ -46,7 +46,7 @@ drupal.org MRs are made from issue forks (`issue/<name>-<nid>`, source branch `<
 - When an MR's issue is also in the triage list, show the MR in that issue's row (MR number, pipeline state) instead of a separate PR row, and handle them together: the PR summary steps for the code, the issue steps for the reply.
 - "The user's latest review" includes their latest comment on the issue, not only notes on the MR.
 - Pipeline state and failed jobs: `drupalorg mr:status 'project/<name>!<iid>'` and `drupalorg mr:logs 'project/<name>!<iid>'` (quote it in zsh).
-- MR titles: drupal.org's commit message takes the MR or issue title, so it needs no edit when the title is already a Conventional Commit (`fix: …`, `feat: …`). When an MR's title isn't one, suggest one; in an owned project offer **Retitle** (see "Actions").
+- MR titles: use drupal.org's commit message header, `<type>: #<issue nid> <one-line summary>` (e.g. `fix: #3354345 Pathologic breaks srcset when used with multipliers`), with type `fix`, `feat`, `ci`, `docs`, `perf`, `refactor`, `test`, `task` (not `chore`) or `revert` ([format](https://www.drupal.org/node/3586390)). The contribution record suggests the commit message but not its type, so a title in this format gives the maintainer the whole header. When an MR's title doesn't follow it, suggest one; in an owned project offer **Retitle** (see "Actions"). The format is core's: for a contrib project whose history uses another format, follow its history.
 - `--mine`: the user's own MRs as in `gitlab.md`; also show the issue's status, since _Needs work_ set by someone else means feedback is waiting.
 
 ## Contribution records

@@ -114,7 +114,7 @@ Show, in this order:
 4. **Your earlier review:** for changes requested and commented, list the user's earlier points (review body and inline comments) and say for each whether the new commits address it, partly address it, or not. Note author replies and thread resolutions. For each of the user's inline threads, read whether it's outdated (its lines changed) or resolved (the reference's "Unresolved review threads"): an outdated thread is a lead, not proof, so read the new code before calling it addressed. When the user approves or keeps requesting changes, offer to resolve the user's own threads you found addressed, listed first.
 5. **Tests:** whether the new commits keep the PR's fix or feature covered (see "Test coverage" in step 8). Check the new commits against "Conventions" (step 8); if the PR discloses AI use, review them as "AI-assisted PRs" says.
 6. **Linked issue** and **target branch:** see "Linked issue" and "Target branch and backports" in step 8.
-7. **Worth a closer look:** anything risky or surprising, new review comments from others, CI state, other reviewers' open change requests.
+7. **Worth a closer look:** anything risky or surprising, new review comments from others, CI state (see "Pending workflow runs" in step 8), other reviewers' open change requests.
 
 Keep it faster to read than the PR itself.
 
@@ -137,7 +137,7 @@ In every review (A or B PRs), post a point that asks for a change to specific co
 
 ### 8. B PR: summarize and hand off
 
-Read the PR description, file list and commits. Say in a few lines what it does, why it's listed, how big it is, whether it has tests (see "Test coverage"), which issue it closes (see "Linked issue"), whether it discloses AI use (see "AI-assisted PRs"), whether it follows the conventions (see "Conventions"), whether it targets the default branch (see "Target branch and backports"), CI state, and who else has reviewed. Then ask: **Review it now** (run `/code-review <n>`, and come back to approve, request changes or comment from that), **Comment**, **Skip**. If the PR is bot-authored or labeled `dependencies`, has failing checks, and the `pr-fix` skill is available (listed as `pr-fix`, or `pr-skills:pr-fix` when installed as a plugin) and supports this host (see its `SKILL.md`), also offer **Fix it** (run it with `<n>`). That skill asks before every commit, push and comment, and only works on PRs opened by a bot or by the user, from a branch in the same repository, so it refuses the PR if it's anyone else's. Never run it unless the user chooses it. Comments follow Conventional Comments, with the text shown first.
+Read the PR description, file list and commits. Say in a few lines what it does, why it's listed, how big it is, whether it has tests (see "Test coverage"), whether its title follows the project's format (see "PR title"), which issue it closes (see "Linked issue"), whether it discloses AI use (see "AI-assisted PRs"), whether it follows the conventions (see "Conventions"), whether it targets the default branch (see "Target branch and backports"), CI state, and who else has reviewed. Then ask: **Review it now** (run `/code-review <n>`, and come back to approve, request changes or comment from that), **Comment**, **Skip**. If the PR is bot-authored or labeled `dependencies`, has failing checks, and the `pr-fix` skill is available (listed as `pr-fix`, or `pr-skills:pr-fix` when installed as a plugin) and supports this host (see its `SKILL.md`), also offer **Fix it** (run it with `<n>`). That skill asks before every commit, push and comment, and only works on PRs opened by a bot or by the user, from a branch in the same repository, so it refuses the PR if it's anyone else's. Never run it unless the user chooses it. Comments follow Conventional Comments, with the text shown first.
 
 #### Test coverage
 
@@ -147,6 +147,18 @@ A PR that changes code should have a test that covers the bug it fixes or the fe
 - Check the PR's changed files for tests that exercise the changed code path, not just any changed test file.
 - Don't ask for tests on changes that don't need them: docs, comments, formatting, config or dependency updates with no code change, or a project with no tests at all (then only suggest adding some if the change is risky).
 - If a fix or feature has no covering test, include it in the review as `**suggestion:** Add a test that covers <the bug or feature>, e.g. <where, following an existing test>.` Mark it `blocking` only when the project's `AGENTS.md`, contributing docs or PR template requires tests (see "Convention claims" below); otherwise `non-blocking`.
+
+#### Pending workflow runs
+
+In an owned repo, CI runs for PRs from forks (or from first-time contributors) may wait for a maintainer's approval, so the PR shows no results. For every PR you handle, and again after any edit you make that starts new runs (a retitle or description edit), list its runs waiting for approval (the host's reference, "Pending workflow runs"), and ask whether to approve them, naming each workflow. Approved runs execute the PR's code, so first say whether the PR changes CI config, workflows or build scripts, and don't offer approval before the user has seen what the PR changes. Report each run's result once it finishes.
+
+#### PR title
+
+When the project sets a title format (a title check in CI such as Conventional Commits, its contributing docs or `AGENTS.md`, or a release tool that builds the changelog from titles), check the PR's title against it and draft one that follows it, keeping the author's wording where it fits.
+
+- **Owned repo:** offer **Retitle** with the new title shown first, and use the reference's "Retitle a PR" command, instead of asking the author in the review. Do it before posting the review, so the review doesn't ask for it. Say whether a title check re-runs on the edit or still needs a new run.
+- **Not owned:** include it in the review as `**chore (blocking):** Could you retitle the PR to `<title>`? <where the format is required>.` Use `non-blocking` when nothing enforces the format.
+- With `--mine`, offer **Retitle** for the user's own PRs in any repo.
 
 #### Linked issue
 
