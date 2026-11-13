@@ -7,6 +7,8 @@ description: Fix failing checks or review feedback on a bot's PR or yours, in DD
 
 Fixes a PR's failing checks, its open review feedback (see "Review feedback"), or both.
 
+Hosts: GitHub and GitHub Enterprise (`gh`). GitLab and drupal.org merge requests aren't supported yet: if the repo's `origin` is on another host, say so and stop.
+
 Arguments: a PR number, `all`, or nothing.
 
 - A number: fix that PR: its failing checks and its open review feedback.
