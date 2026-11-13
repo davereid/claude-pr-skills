@@ -85,6 +85,11 @@ jobs:
         with:
           autostart: false
 
+      # DDEV doesn't pass the runner's CI=true into its containers, so code run
+      # with ddev exec can't tell it's in CI. See ddev/github-action-setup-ddev#61.
+      - run: ddev dotenv set .ddev/.env.web --ci=true
+        if: steps.pr.outputs.match == 'true'
+
       - uses: anthropics/claude-code-action@c0949c50a78c1ec8ce2647db36629b870e715d0c # v1.0.268
         if: steps.pr.outputs.match == 'true'
         with:
