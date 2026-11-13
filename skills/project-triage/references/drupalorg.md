@@ -29,11 +29,20 @@ drupal.org issues have a status, which says whose turn it is. Show it in the iss
 
 In an owned project, _Needs review_ and _RTBC_ issues are listed as B even if the user has commented, when there's no comment from the user since the status changed: they're waiting on the maintainer. _Needs work_ and _Postponed_ issues whose latest comment is the user's stay hidden.
 
+## Migrated issues
+
+Issues migrated from drupal.org's issue queue to work items are authored by `drupalbot` on GitLab. Find who really opened them, and when, before classifying:
+
+- **Reporter:** the description's `Reported by: [<name>](https://www.drupal.org/user/<uid>)` line. Use it as the issue's author for skipping the user's own issues and for `exclude.authors`. Compare the drupal.org user ID with the user's (their drupal.org profile URL), not the name: the display name ("dave reid") differs from the GitLab username (`davereid`).
+- **Comments:** migrated comments keep their real GitLab authors, but `created_at` is the migration time. The original date is in the `_Migrated from comment #N posted <date>_` line: show that date, and say that "last updated" on migrated issues reflects the migration.
+- **Ignore** `drupalbot`'s "Issue tools" notes and `System_Message` commit notes when finding the latest comment.
+
 ## Merge requests belong to issues
 
 drupal.org MRs are made from issue forks (`issue/<name>-<nid>`, source branch `<nid>-<slug>`) and the issue is where the discussion and status live. MR reviewers and approvals are rarely used.
 
 - List the project's open MRs as in `gitlab.md` (they target `project/<name>`), and find each one's issue from its source project or branch.
+- An MR and its issue are excluded together: when the profile's `exclude` drops either one (e.g. the issue's `v7.x-*` version label, or the MR's `7.x-*` target branch), drop both.
 - When an MR's issue is also in the triage list, show the MR in that issue's row (MR number, pipeline state) instead of a separate PR row, and handle them together: the PR summary steps for the code, the issue steps for the reply.
 - "The user's latest review" includes their latest comment on the issue, not only notes on the MR.
 - Pipeline state and failed jobs: `drupalorg mr:status 'project/<name>!<iid>'` and `drupalorg mr:logs 'project/<name>!<iid>'` (quote it in zsh).

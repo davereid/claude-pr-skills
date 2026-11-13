@@ -70,12 +70,10 @@ Without `--mine`, it skips drafts and your own PRs and issues.
 
 ## Profile
 
-The profile says which PRs are yours in repositories you don't own: paths, labels, keywords, CODEOWNERS entries, authors and labels to exclude (these also apply to issues), and a plain-language description of your skill set. Copy [profile.example.md](profile.example.md) to one or both of:
+The profile says which PRs are yours in repositories you don't own: paths, labels, keywords, CODEOWNERS entries, authors and labels to exclude (these also apply to issues), base branches to exclude (such as an unsupported `7.x-*`; labels and branches accept `*` wildcards), and a plain-language description of your skill set. Copy [profile.example.md](profile.example.md) to one or both of:
 
 1. `~/.config/project-triage/profile.md`: your defaults for every repository.
 2. `<repo root>/.claude/project-triage.md`: overrides for one repository. Its lists replace the same lists from your user file.
-
-If you have a profile from `pr-triage` (`~/.config/pr-triage/profile.md` or `.claude/pr-triage.md`), the skill uses it and offers to move it.
 
 PRs that request your review, or that you already reviewed, are always shown, whatever the profile says. Without a profile, the skill asks a few questions and offers to write one, and saves nothing until you agree.
 

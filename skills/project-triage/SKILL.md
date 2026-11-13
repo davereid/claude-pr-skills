@@ -76,13 +76,13 @@ For each PR, find the user's latest review (by submission time, author = `$ME`; 
 
 Rule matching (apply it literally and say which rule matched):
 - `paths`: any changed file matches a glob (`**` crosses directories, `*` doesn't).
-- `labels`: any label equals one listed. `keywords`: any word in the title is a form of a keyword, case-insensitive: plurals, verb forms and related nouns count (`migrate` matches "migrates", "migrated", "migrating", "migration" and "migrations"), but not unrelated words that share letters (`test` doesn't match "latest"). Say which title word matched.
+- `labels`: any label matches one listed, exactly or as a glob where `*` matches any characters (`v7.x-*` matches `v7.x-1.x-dev` and `v7.x-1.9`). `keywords`: any word in the title is a form of a keyword, case-insensitive: plurals, verb forms and related nouns count (`migrate` matches "migrates", "migrated", "migrating", "migration" and "migrations"), but not unrelated words that share letters (`test` doesn't match "latest"). Say which title word matched.
 - `codeowners: true`: read the code owners file at the PR's base (where it lives and its syntax are in the host's reference, "CODEOWNERS"); for each changed file the last matching pattern wins; it matches if that entry lists `@$ME` or one of the user's teams.
-- `exclude`: `authors` or `labels` match, or `paths` match **every** changed file. Excludes don't hide requested reviews when `always_show_requested` is true (default).
+- `exclude`: `authors` or `labels` match, `branches` matches the PR's base (target) branch as a glob (`*` matches any characters, `7.x-*` matches `7.x-1.x`), or `paths` match **every** changed file. Excludes don't hide requested reviews when `always_show_requested` is true (default).
 
 ### 4. Classify issues
 
-Drop issues whose author or labels match the profile's `exclude` (`paths` doesn't apply to issues). For each remaining issue, find the user's latest comment.
+Drop issues whose author or labels match the profile's `exclude` (`paths` and `branches` don't apply to issues). For each remaining issue, find the user's latest comment.
 
 - **A**: the user has commented, and someone else commented after the user's latest comment.
 - **B**: the user hasn't commented. Say why it's listed: "your repo", or "assigned to you".
@@ -215,23 +215,22 @@ A Markdown file with YAML front matter. Two optional files; the repo file wins:
 1. `~/.config/project-triage/profile.md`: the user's defaults for every repo.
 2. `<repo root>/.claude/project-triage.md`: overrides for one repo.
 
-Older versions of this skill wrote `~/.config/pr-triage/profile.md` and `<repo root>/.claude/pr-triage.md`. Their format is the same. If an old file exists and its new counterpart doesn't, use it, and offer to move it to the new path (and to delete the old one), with the user's go-ahead. If both exist, use the new one and say the old one can be deleted.
-
 Merge: mappings merge key by key, and a list in the repo file replaces the same list from the user file. The Markdown body of the repo file replaces the user file's body if it's non-empty. Front matter keys (all optional):
 
 ```yaml
 match:
   paths: ["src/migrations/**"]    # any changed file matches
-  labels: [ci]
+  labels: [ci]                    # exact, or globs: ["area-*"]
   keywords: [migrate]             # any form of the word in the title
   codeowners: true                # CODEOWNERS entries naming me or my teams
 exclude:
   authors: [renovate[bot], dependabot[bot]]   # PRs and issues
-  labels: [dependencies]                      # PRs and issues
+  labels: [dependencies, "v7.x-*"]            # PRs and issues; globs allowed
+  branches: ["7.x-*"]             # PRs only: base (target) branch, globs allowed
   paths: ["**/*.lock"]            # PRs only, if ALL changed files match
 always_show_requested: true       # requested reviews ignore exclude (default true)
 ```
 
 `match` applies to PRs in repos the user doesn't own; in owned repos every PR and issue is listed unless `exclude` matches. The body describes the user's skill set in plain language (what they know well, and what they're less involved in). It is used for "judgment call" matches, and teammates can read it. See `profile.example.md` next to this file.
 
-If neither file exists (nor an old one), say so, ask the user 3–4 questions (areas they work on, paths or labels to include or exclude, whether to hide bot PRs), and offer to write a profile after showing it. To suggest paths, look at where they have reviewed or authored before. Don't write any profile file without the user's go-ahead.
+If neither file exists, say so, ask the user 3–4 questions (areas they work on, paths or labels to include or exclude, whether to hide bot PRs), and offer to write a profile after showing it. To suggest paths, look at where they have reviewed or authored before. Don't write any profile file without the user's go-ahead.
