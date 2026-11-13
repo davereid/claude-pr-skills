@@ -1,0 +1,14 @@
+site_name: <Project name> module documentation
+site_url: https://project.pages.drupalcode.org/<name>/
+repo_url: https://git.drupalcode.org/project/<name>
+edit_uri: -/edit/<default branch>/docs/
+theme:
+  name: material
+  icon:
+    repo: fontawesome/brands/gitlab
+  features:
+    - content.action.edit
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences

@@ -1,6 +1,6 @@
 {
   "name": "pr-skills",
-  "description": "Claude Code skills for pull requests: pr-fix diagnoses and fixes failing PRs in DDEV projects, and pr-triage lists the PRs that need your review.",
+  "description": "Claude Code skills for pull requests and drupal.org projects: pr-fix diagnoses and fixes failing PRs in DDEV projects, pr-triage lists the PRs that need your review, setup-checkout clones or updates a drupal.org checkout with DDEV, update-docs keeps the README, docs and project page current, setup-docs publishes docs/ with MkDocs, and create-release tags and publishes releases.",
   "version": "0.1.0",
   "author": {
     "name": "Dave Reid"

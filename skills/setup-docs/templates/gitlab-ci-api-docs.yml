@@ -1,0 +1,29 @@
+# Generates the API docs (docs/api) from the PHP code before the templates'
+# pages job builds the site. Keeps the job's script; overrides the image (PHP
+# and Python), waits for the composer job's vendor directory, and adds the
+# PHP paths to the template's rules, so code changes also republish the docs.
+# @todo Re-check these rules against include.drupalci.main.yml's pages job
+#   when updating the templates' version.
+pages:
+  image: ghcr.io/elecena/python-php:latest
+  needs:
+    - job: composer
+  before_script:
+    - composer run docs
+  rules:
+    - !reference [.skip-pages-rule]
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+      exists:
+        - mkdocs.yml
+      changes: &api-docs-changed-files
+        - docs/**/*
+        - mkdocs.yml
+        - src/**/*
+        - <other documented paths, e.g. tests/src/Traits/**/*>
+    - if: $_PAGES_FORCE_REBUILD == "1" && ($CI_PIPELINE_SOURCE == "schedule" || $CI_PIPELINE_SOURCE == "web") && $CI_PROJECT_ROOT_NAMESPACE == "project"
+      exists:
+        - mkdocs.yml
+    - if: $CI_PROJECT_ROOT_NAMESPACE == "issue"
+      changes: *api-docs-changed-files
+      when: manual
+      allow_failure: true
