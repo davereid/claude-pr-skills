@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write # Create release tags and GitHub releases.
+      issues: write # Add labels to the release PR.
       pull-requests: write # Open and update the release PR.
     steps:
       - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
