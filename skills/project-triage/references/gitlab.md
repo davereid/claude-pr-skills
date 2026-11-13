@@ -79,7 +79,7 @@ MRs the user reviewed or authored: `merge_requests?scope=all&reviewer_username=$
 
 ## Unresolved threads
 
-`projects/:id/merge_requests/<iid>/discussions?per_page=100`: count discussions whose notes are `resolvable` and not `resolved`.
+`projects/:id/merge_requests/<iid>/discussions?per_page=100`: count discussions whose notes are `resolvable` and not `resolved`. A diff note is outdated when its `position.head_sha` differs from the MR's head and the lines changed (the MR's diff view shows it as such). Resolve one: `glab api --hostname <host> -X PUT "projects/:id/merge_requests/<iid>/discussions/<discussion id>?resolved=true"`.
 
 Your own MRs: `projects/:id/merge_requests?state=opened&author_username=$ME&per_page=100`, with `detailed_merge_status` and the reviewer states.
 
@@ -89,6 +89,7 @@ Your own MRs: `projects/:id/merge_requests?state=opened&author_username=$ME&per_
 - Withdraw an approval: `glab mr revoke <iid> -R <repo>`.
 - Request changes: post the blocking comment as a note. Setting GitLab's "Requested changes" reviewer state through the API isn't verified: tell the user to submit the review with **Request changes** in the MR's UI if they want that state.
 - Comment on an MR: `glab mr note <iid> -R <repo> -m "<text>"`
+- Inline comment on the diff: take `base_commit_sha`, `start_commit_sha` and `head_commit_sha` from the newest entry in `projects/:id/merge_requests/<iid>/versions`, then `glab api --hostname <host> -X POST "projects/:id/merge_requests/<iid>/discussions" -f body="<text>" -f "position[position_type]=text" -f "position[base_sha]=<base>" -f "position[start_sha]=<start>" -f "position[head_sha]=<head>" -f "position[old_path]=<path>" -f "position[new_path]=<path>" -f "position[new_line]=<line>"` (`position[old_line]` instead for a removed line). Post one per point, then the general points as a note. Not verified: check the note shows on the diff line afterwards, and if it doesn't, post it as a note naming the file and line.
 - Comment on an issue: `glab issue note <iid> -R <repo> -m "<text>"`
 - Close an issue: `glab issue close <iid> -R <repo>` after the comment.
 - Edit an MR's description: `glab mr update <iid> -R <repo> --description-file <file>`, after all edits to the file have succeeded.

@@ -83,8 +83,10 @@ PR's own changes: `gh pr view <n> -R <repo> --json files,commits`. Re-fetch befo
 Use the `reviewThreads` query from `pr-fix`'s "Review feedback" if that skill is installed (only `isResolved` is needed), or:
 
 ```bash
-gh api graphql -f query='query($o:String!,$r:String!,$n:Int!){repository(owner:$o,name:$r){pullRequest(number:$n){reviewThreads(first:100){nodes{isResolved}}}}}' -F o=<owner> -F r=<name> -F n=<n>
+gh api graphql -f query='query($o:String!,$r:String!,$n:Int!){repository(owner:$o,name:$r){pullRequest(number:$n){reviewThreads(first:100){nodes{id isResolved isOutdated path line comments(first:1){nodes{author{login} body}}}}}}}' -F o=<owner> -F r=<name> -F n=<n>
 ```
+
+The user's threads are those whose first comment's author is `$ME`. Resolve one: `gh api graphql -f query='mutation($id:ID!){resolveReviewThread(input:{threadId:$id}){thread{isResolved}}}' -F id=<thread id>`.
 
 Your own PRs: `gh pr list -R <repo> --state open --author @me --limit 100 --json number,title,url,body,isDraft,reviewDecision,reviewRequests,reviews,headRefOid,updatedAt`.
 
@@ -92,6 +94,12 @@ Your own PRs: `gh pr list -R <repo> --state open --author @me --limit 100 --json
 
 - Approve: `gh pr review <n> -R <repo> --approve --body "<text>"`
 - Request changes: `gh pr review <n> -R <repo> --request-changes --body "<text>"`
+- Review with inline comments: `gh pr review` can't add them. Write the review to a JSON file and post it with `gh api -X POST repos/<repo>/pulls/<n>/reviews --input <file>`:
+  ```json
+  {"commit_id": "<headRefOid>", "event": "REQUEST_CHANGES", "body": "<general points>",
+   "comments": [{"path": "src/Foo.php", "line": 51, "side": "RIGHT", "body": "**issue (blocking):** …"}]}
+  ```
+  `event` is `APPROVE`, `REQUEST_CHANGES` or `COMMENT`. `line` is the line number in the file at `commit_id` (`side: "LEFT"` for a removed line, numbered in the base); add `start_line` for a range. A line outside the diff fails the whole request with a 422: move that point to the body.
 - Comment on a PR: `gh pr comment <n> -R <repo> --body "<text>"`
 - Dismiss the user's own review: `gh api -X PUT repos/<repo>/pulls/<n>/reviews/<review-id>/dismissals -f message="<reason>"`. Not verified to work on the user's own reviews: if it fails, say so and offer request-changes or a comment.
 - Comment on an issue: `gh issue comment <n> -R <repo> --body "<text>"`
