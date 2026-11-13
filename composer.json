@@ -1,5 +1,5 @@
 {
-    "name": "davereid/claude-pr-skills",
+    "name": "davereid/skills",
     "description": "Claude Code skills for pull requests: fix failing PRs in DDEV projects (with a Taskfile and CI workflow) and triage the PRs that need your review.",
     "type": "library",
     "license": "MIT",

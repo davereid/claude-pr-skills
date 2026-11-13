@@ -4,21 +4,21 @@ You connect accounts and grant access yourself; the skill can't.
 
 ## Local
 
-**Plugin only:** `/plugin marketplace add davereid/claude-pr-skills`, then `/plugin install pr-skills@davereid` (the command is then `/pr-skills:pr-fix`), then do steps 4–5 below. Composer and the Taskfile are only needed for `task pr:*` and the CI workflow. Don't also run `install-skill`, or the skill is loaded twice.
+**Plugin only:** `/plugin marketplace add davereid/skills`, then `/plugin install pr-skills@davereid` (the command is then `/pr-skills:pr-fix`), then do steps 4–5 below. Composer and the Taskfile are only needed for `task pr:*` and the CI workflow. Don't also run `install-skill`, or the skill is loaded twice.
 
-1. `composer require --dev davereid/claude-pr-skills`
+1. `composer require --dev davereid/skills`
 2. Add to the project's root `Taskfile.yml`:
    ```yaml
    includes:
-     pr: ./vendor/davereid/claude-pr-skills/Taskfile.yml
+     pr: ./vendor/davereid/skills/Taskfile.yml
    ```
 3. Install the skill into `.claude/skills/pr-fix`, using one of these:
-   - **Drupal sites with `drupal/core-composer-scaffold`:** add `"davereid/claude-pr-skills"` to `extra.drupal-scaffold.allowed-packages` in the root `composer.json`, then run `composer install`. Add it to the existing list if there is one:
+   - **Drupal sites with `drupal/core-composer-scaffold`:** add `"davereid/skills"` to `extra.drupal-scaffold.allowed-packages` in the root `composer.json`, then run `composer install`. Add it to the existing list if there is one:
      ```json
      "extra": {
          "drupal-scaffold": {
              "allowed-packages": [
-                 "davereid/claude-pr-skills"
+                 "davereid/skills"
              ]
          }
      }

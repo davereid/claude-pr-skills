@@ -1,7 +1,7 @@
 # Claude PR Skills
 
-[![Packagist Version](https://img.shields.io/packagist/v/davereid/claude-pr-skills)](https://packagist.org/packages/davereid/claude-pr-skills)
-[![skills.sh](https://img.shields.io/badge/skills.sh-pr--skills-black)](https://skills.sh/davereid/claude-pr-skills)
+[![Packagist Version](https://img.shields.io/packagist/v/davereid/skills)](https://packagist.org/packages/davereid/skills)
+[![skills.sh](https://img.shields.io/badge/skills.sh-pr--skills-black)](https://skills.sh/davereid/skills)
 
 Claude Code skills for working with pull requests.
 
@@ -19,13 +19,13 @@ Each skill's README has its requirements, installation steps, usage and limits. 
 With [`npx skills`](https://github.com/vercel-labs/skills), the recommended way: one command, short commands (`/pr-fix`, `/pr-triage`), and it also works with other agents it supports:
 
 ```
-npx skills add https://github.com/davereid/claude-pr-skills
+npx skills add https://github.com/davereid/skills
 ```
 
 Other ways:
 
-- With Composer, which also provides the `pr-fix` Taskfile tasks and CI workflow: `composer require --dev davereid/claude-pr-skills`
-- As a Claude Code plugin: `/plugin marketplace add davereid/claude-pr-skills`, then `/plugin install pr-skills@davereid`. The commands are then `/pr-skills:pr-fix` and `/pr-skills:pr-triage`.
+- With Composer, which also provides the `pr-fix` Taskfile tasks and CI workflow: `composer require --dev davereid/skills`
+- As a Claude Code plugin: `/plugin marketplace add davereid/skills`, then `/plugin install pr-skills@davereid`. The commands are then `/pr-skills:pr-fix` and `/pr-skills:pr-triage`.
 
 
 ## AI disclosure

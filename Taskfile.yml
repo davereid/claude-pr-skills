@@ -2,7 +2,7 @@ version: '3'
 
 # Include from the project's root Taskfile.yml:
 #   includes:
-#     pr: ./vendor/davereid/claude-pr-skills/Taskfile.yml
+#     pr: ./vendor/davereid/skills/Taskfile.yml
 
 tasks:
   default:
@@ -22,8 +22,8 @@ tasks:
     cmds:
       - mkdir -p .claude/skills
       # shortcut: assumes Composer's default vendor/ folder; adjust the links if vendor-dir is customized.
-      - ln -sfn ../../vendor/davereid/claude-pr-skills/skills/pr-fix .claude/skills/pr-fix
-      - ln -sfn ../../vendor/davereid/claude-pr-skills/skills/pr-triage .claude/skills/pr-triage
+      - ln -sfn ../../vendor/davereid/skills/skills/pr-fix .claude/skills/pr-fix
+      - ln -sfn ../../vendor/davereid/skills/skills/pr-triage .claude/skills/pr-triage
 
   install-workflow:
     desc: Copy the CI workflow template into .github/workflows (shows a diff if it already exists)
