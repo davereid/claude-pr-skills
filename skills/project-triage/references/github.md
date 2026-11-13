@@ -53,7 +53,7 @@ For one issue: `gh issue view <n> -R <repo> --json title,body,author,labels,assi
 
 ## Searching upstream
 
-`gh search issues --repo <owner>/<repo> --state=all --limit 30 --json number,title,state,url,updatedAt -- "<words>"` (searches titles, bodies and comments). Add `--match title` to narrow it. Works for any public repo, not only this one.
+`gh search issues --repo <owner>/<repo> --limit 30 --json number,title,state,url,updatedAt -- "<words>"` (searches titles, bodies and comments). Add `--match title` to narrow it. Works for any public repo, not only this one.
 
 ## Profile suggestions
 
