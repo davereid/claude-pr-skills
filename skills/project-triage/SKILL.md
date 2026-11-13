@@ -111,7 +111,8 @@ Show, in this order:
 2. **What changed:** plain-language summary, commits one per line, files with +/- counts. Flag when all new commits are base merges.
 3. **How it affects the PR:** does it change behavior, scope or purpose; does it touch what the user originally reviewed; or is it only tests, docs, formatting or a base merge.
 4. **Your earlier review:** for changes requested and commented, list the user's earlier points (review body and inline comments) and say for each whether the new commits address it, partly address it, or not. Note author replies and thread resolutions.
-5. **Worth a closer look:** anything risky or surprising, new review comments from others, CI state, other reviewers' open change requests.
+5. **Tests:** whether the new commits keep the PR's fix or feature covered (see "Test coverage" in step 8).
+6. **Worth a closer look:** anything risky or surprising, new review comments from others, CI state, other reviewers' open change requests.
 
 Keep it faster to read than the PR itself.
 
@@ -132,7 +133,16 @@ Before drafting text, apply "Verify before commenting" (in step 8) to each earli
 
 ### 8. B PR: summarize and hand off
 
-Read the PR description, file list and commits. Say in a few lines what it does, why it's listed, how big it is, CI state, and who else has reviewed. Then ask: **Review it now** (run `/code-review <n>`, and come back to approve, request changes or comment from that), **Comment**, **Skip**. If the PR is bot-authored or labeled `dependencies`, has failing checks, and the `pr-fix` skill is available (listed as `pr-fix`, or `pr-skills:pr-fix` when installed as a plugin) and supports this host (see its `SKILL.md`), also offer **Fix it** (run it with `<n>`). That skill asks before every commit, push and comment, and only works on PRs opened by a bot or by the user, from a branch in the same repository, so it refuses the PR if it's anyone else's. Never run it unless the user chooses it. Comments follow Conventional Comments, with the text shown first.
+Read the PR description, file list and commits. Say in a few lines what it does, why it's listed, how big it is, whether it has tests (see "Test coverage"), CI state, and who else has reviewed. Then ask: **Review it now** (run `/code-review <n>`, and come back to approve, request changes or comment from that), **Comment**, **Skip**. If the PR is bot-authored or labeled `dependencies`, has failing checks, and the `pr-fix` skill is available (listed as `pr-fix`, or `pr-skills:pr-fix` when installed as a plugin) and supports this host (see its `SKILL.md`), also offer **Fix it** (run it with `<n>`). That skill asks before every commit, push and comment, and only works on PRs opened by a bot or by the user, from a branch in the same repository, so it refuses the PR if it's anyone else's. Never run it unless the user chooses it. Comments follow Conventional Comments, with the text shown first.
+
+#### Test coverage
+
+A PR that changes code should have a test that covers the bug it fixes or the feature it adds. The test doesn't need to be extensive: one test that would fail without the change, or that exercises the new behavior, is enough.
+
+- Use the project's own test setup: find which frameworks it uses (e.g. PHPUnit, Jest, Playwright, pytest) from its test directories, dependencies and CI config, and expect the kind of test the project already writes for similar code.
+- Check the PR's changed files for tests that exercise the changed code path, not just any changed test file.
+- Don't ask for tests on changes that don't need them: docs, comments, formatting, config or dependency updates with no code change, or a project with no tests at all (then only suggest adding some if the change is risky).
+- If a fix or feature has no covering test, include it in the review as `**suggestion:** Add a test that covers <the bug or feature>, e.g. <where, following an existing test>.` Mark it `blocking` only when the project's `AGENTS.md`, contributing docs or PR template requires tests (see "Convention claims" below); otherwise `non-blocking`.
 
 #### Verify before commenting
 

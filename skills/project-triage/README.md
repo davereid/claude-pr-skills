@@ -12,7 +12,7 @@ What it looks at depends on the repository:
 It finds two kinds of PR:
 
 - **Needs your action:** you already reviewed it and it has new commits (or you were asked to review it again). The skill summarizes what changed since your review, checks whether your earlier comments were addressed, and offers to approve, request changes, comment or show the full diff.
-- **Needs your review:** you haven't reviewed it, and you were asked to, it matches your profile, or it's in your repository. The skill summarizes it and offers to hand off to a full review (`/code-review`), comment, or skip. For a failing bot PR, it also offers `/pr-fix` if that skill is installed.
+- **Needs your review:** you haven't reviewed it, and you were asked to, it matches your profile, or it's in your repository. The skill summarizes it, checks that a code change has a test covering its fix or feature (using the project's own test frameworks), and offers to hand off to a full review (`/code-review`), comment, or skip. For a failing bot PR, it also offers `/pr-fix` if that skill is installed.
 
 And two kinds of issue:
 
