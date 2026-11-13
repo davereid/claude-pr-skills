@@ -51,7 +51,7 @@ With `--mine`, it lists the user's own open PRs instead, with what each is waiti
   Use the reference's commands for every step, mapping the skill's terms (review, requested reviewers, draft) as the reference says. If a command fails, report the error; don't treat it as an unsupported host.
 - **Who:** find the user's login on that host (`$ME`), as the reference says. Logins can differ between hosts.
 - **What:** PRs and issues by default. `--code` limits it to PRs, `--issues` to issues. `--mine` defaults to `--code`; add `--issues` for the user's own issues.
-- **Single item:** a number (`/project-triage 1039`, or `owner/repo#1039`): only that item. Skip the profile and classification, find out whether it's a PR or an issue, and go to step 5 for it. A PR the user hasn't reviewed: say so and summarize it as a B PR. An issue: summarize it (step 9). If it's their own, closed or a draft, say so and stop.
+- **Single item:** a number (`/project-triage 1039`, or `owner/repo#1039`): only that item. Skip the profile and classification, find out whether it's a PR or an issue, and go to step 5 for it. A PR the user hasn't reviewed: say so and summarize it as a B PR. An issue, including the user's own: summarize it (step 9). If it's the user's own PR, closed or a draft, say so and stop.
 - **Which repos:** no number: the current repo (see **Repo**). `--all` searches every repo the user can read (review requests, reviews, issues assigned to them, and the repos they own), and applies the user profile only. If the host's reference says some owned repos can't be found this way, say so, and suggest triaging those one at a time.
 - **Owned:** check whether the user owns each repo, with the rule and commands in the host's reference ("Ownership").
 - `--mine`: go to "Your own PRs" (and "Your own issues" with `--issues`), with the same repo scope. It doesn't use the profile.
@@ -275,7 +275,18 @@ Read the issue, its comments and the PRs linked to it. Show:
 4. **Linked PRs:** number, state and whether they're in this triage list.
 5. **Worth a closer look:** whether it looks like a bug in this project, in a dependency or upstream, a duplicate, a support question or a feature request, and what you'd check to be sure.
 
-Then ask: **Investigate** (read the code, apply "Verify before commenting" and, when the cause may be in a dependency, "Check upstream"; then come back to these options), **Comment**, **Comment and close** (e.g. a duplicate, an upstream bug, or answered), **Skip**, plus any options the host's reference adds (such as setting an issue's status). Show the exact text (and the close reason or new status) and get the user's go-ahead first. Issue replies answer the reporter in plain prose, not Conventional Comments. Before posting, fetch the comments again, in case someone replied in the meantime.
+Then ask: **Investigate** (for an issue with little detail, follow "Thin issues"; otherwise read the code, apply "Verify before commenting" and, when the cause may be in a dependency, "Check upstream"; then come back to these options), **Comment**, **Comment and close** (e.g. a duplicate, an upstream bug, or answered), **Skip**, plus any options the host's reference adds (such as setting an issue's status). Show the exact text (and the close reason or new status) and get the user's go-ahead first. Issue replies answer the reporter in plain prose, not Conventional Comments. Before posting, fetch the comments again, in case someone replied in the meantime.
+
+#### Thin issues
+
+When an issue has little detail, such as a title, a link or a hunch ("Investigate X", "should return FALSE when…"), offer **Investigate** first, and turn it into something actionable:
+
+1. **Confirm or disprove each claim.** Read this project's code, and the code or docs of the tool, host or project the issue names. Run the project's code against the case the issue describes (a small read-only script, in a scratch directory outside the repository), and run each case in its own process when the code caches state. Say which claims you confirmed, which you disproved, and which you couldn't check.
+2. **Gather references:** links to docs, source files with line numbers, other projects that handle the same case, and related issues and PRs in this repo. Prefer public sources, and leave private repositories and client projects out of the comment.
+3. **Draft a findings comment** that leaves the issue actionable: what's confirmed (with its reference), the proposed change (the method, setting or behavior, and the branch or release it belongs in, e.g. a breaking change for the next major), and each decision the maintainer needs to make, as a question with a recommendation. Link related issues that one change would also fix.
+4. **Split separate work** into new issues (title, a short body with its references and open questions, and labels), each shown first and created only after the user's go-ahead. Link them from the findings comment.
+
+For the user's own issue, also offer to retitle it, or to update its description when the findings change what it asks for, keeping the user's text. Leave the issue open unless the user decides it's done.
 
 #### Check upstream
 

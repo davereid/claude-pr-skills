@@ -19,7 +19,7 @@ And two kinds of issue:
 - **Needs your reply:** you commented, and someone else replied after you.
 - **Needs triage:** you haven't commented yet.
 
-For each issue it summarizes the report and the replies since your last comment, and offers to investigate (reading the code to check what it can), comment, comment and close, or skip. Issues where your comment is the latest are counted as waiting on others.
+For each issue it summarizes the report and the replies since your last comment, and offers to investigate (reading the code to check what it can), comment, comment and close, or skip. For an issue with little detail, such as a title or a link, the investigation confirms or disproves its claims by running the project's code, gathers references, and drafts a findings comment with the proposed change and the decisions left to make, splitting separate work into new issues. Issues where your comment is the latest are counted as waiting on others.
 
 With `--mine`, it lists your own open PRs instead, with what each is waiting on: changes requested, unresolved threads, failing CI, unchecked tasks in the description, or a review. For a PR with work left, it offers to hand off to `/pr-fix` if that skill is installed. Add `--issues` for your own issues that have new replies.
 
@@ -54,7 +54,7 @@ With the plugin install, use `/pr-skills:project-triage` instead of `/project-tr
 | Command | What it does |
 |---|---|
 | `/project-triage` | Triage the current repository's PRs and issues |
-| `/project-triage 1039` | Only that PR or issue (also `owner/repo#1039`) |
+| `/project-triage 1039` | Only that PR or issue (also `owner/repo#1039`), including your own issues |
 | `/project-triage owner/repo` | Triage another repository |
 | `/project-triage --all` | Search every repository, using your user profile only |
 | `--code` | Only PRs |
