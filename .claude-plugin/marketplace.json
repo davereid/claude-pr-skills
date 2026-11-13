@@ -7,7 +7,7 @@
     {
       "name": "pr-skills",
       "source": "./",
-      "description": "Skills for pull requests: pr-fix (fix failing PRs in DDEV projects) and pr-triage (list the PRs that need your review)."
+      "description": "Skills for pull requests and drupal.org projects: pr-fix (fix failing PRs in DDEV projects), pr-triage (list the PRs that need your review), setup-checkout (clone or update a checkout with DDEV), update-docs (README, docs and project page), setup-docs (MkDocs site for docs/) and create-release (tag and publish releases)."
     }
   ]
 }
