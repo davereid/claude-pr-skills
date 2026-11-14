@@ -239,8 +239,6 @@ How they combine depends on ownership:
 - **Owned repo:** both apply. The user sets the project's direction, so their global rules can be raised like project rules, though still worded as their preference when the repo doesn't write them down.
 - **Not owned:** the project's conventions come first. Raise a global rule only where the project has no convention of its own on that point, as a non-blocking suggestion, and drop it where it conflicts with what the project does.
 
-**DDEV in CI:** when a PR adds or changes a CI job that starts DDEV (e.g. GitHub Actions' `ddev/github-action-setup-ddev`, or `ddev start` in any CI config), check that the job sets `CI` for the web container before DDEV starts, e.g. `ddev dotenv set .ddev/.env.web --ci=true`. DDEV doesn't pass the runner's `CI` into its containers, so code run with `ddev exec` or `ddev drush` can't tell it's in CI ([ddev/github-action-setup-ddev#61](https://github.com/ddev/github-action-setup-ddev/issues/61)). Raise it as a non-blocking suggestion.
-
 #### Target branch and backports
 
 Changes land on the default branch first, then go to older supported branches. When a PR targets another branch (an older release branch, or a stale one):
