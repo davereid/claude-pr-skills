@@ -64,7 +64,7 @@ For developers on DDEV projects that get dependency PRs from Renovate or Dependa
   - touch production or other remote environments
   - merge, approve or close PRs
   - modify any PR that isn't eligible
-  - force-push
+  - force-push, except `--force-with-lease` after rebasing the user's own PR when their instructions allow it (added 2026-11-13; merging the base in is the default)
   - push to any branch other than the PR's own
   - push from CI
 
@@ -77,7 +77,7 @@ For developers on DDEV projects that get dependency PRs from Renovate or Dependa
 | Integration | Purpose | Actions needed and exact scope | Connector or fallback | Status | Allowed tools versus forbidden tools |
 |---|---|---|---|---|---|
 | GitHub (`gh` CLI) | Read the PR, checks and logs; comment | Read PRs, checks and run logs; post a comment. One repo, with a fine-grained token: Contents R/W, Pull requests R/W, Actions R. | CLI | Installed; not logged in to GHE (to verify) | Allowed: `gh pr view/diff/checks/list`, `gh run view --log-failed`, `gh pr comment`, `gh api` GET. Forbidden: `gh pr merge/review/close/edit`, label, settings and delete calls. |
-| git | Commit and push the fix | Push only to the matching PR's head branch | CLI, with the user's SSH key and signing | Reachable | Allowed: `fetch`, `checkout` of the PR branch, `add`, `commit`, `push` (not force). Forbidden: force-push, and pushing to other branches. |
+| git | Commit and push the fix | Push only to the matching PR's head branch | CLI, with the user's SSH key and signing | Reachable | Allowed: `fetch`, `checkout` of the PR branch, `add`, `commit`, `merge` of the PR's base, `push` (not force). Rebase and `push --force-with-lease` only as above. Forbidden: other force-pushes, and pushing to other branches. |
 | DDEV | Install the site; run the failed job's commands | Local project only | CLI | v1.25.5 | Allowed: `ddev start`, `ddev composer`, `ddev task`, `ddev drush`/`exec` locally. Forbidden: remote aliases, `sql-sync` or pulls from remotes, Terminus. |
 | ddev-claude container (optional) | Run the skill inside the container | Same as DDEV, without the `ddev` prefix | Add-on `marcoscano/ddev-claude` | Unverified, still being set up | Same as above |
 | `anthropics/claude-code-action` (CI) | Diagnose and test a fix in CI | Read the repo and logs. Workflow permissions: `contents: read`, `actions: read`, `pull-requests: write`. | GitHub Action, pinned `c0949c50a78c1ec8ce2647db36629b870e715d0c` (v1.0.268) | New dependency; key owner and GHE support unknown | Allowed: read and run DDEV. Forbidden: push, merge. |
